@@ -2,7 +2,6 @@ import { Navbar } from "./Navbar";
 import { Hero } from "./Hero";
 import { IntroSection } from "./IntroSection";
 import { Stats } from "./Stats";
-import { AcademicStages } from "./AcademicStages";
 import { EducationalGames } from "./EducationalGames";
 import { CompetitiveSection } from "./CompetitiveSection";
 import { AppDownload } from "./AppDownload";
