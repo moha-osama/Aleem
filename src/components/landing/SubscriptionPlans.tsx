@@ -1,4 +1,5 @@
 import kidsTabletImage from "/win-chid.jpeg";
+import { motion } from "framer-motion";
 
 const plans = [
   {
@@ -57,7 +58,13 @@ export function SubscriptionPlans() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6 }}
+        >
           <h2
             className="text-3xl md:text-4xl text-[#8033CC] mb-3"
             style={{ fontWeight: 800 }}
@@ -74,15 +81,15 @@ export function SubscriptionPlans() {
           >
             اختر الخطة المناسبة لاحتياجات طفلك
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-10 items-center">
           {/* Plans */}
           <div className="w-full lg:w-3/5 grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {plans.map((plan) => (
-              <div
+            {plans.map((plan, i) => (
+              <motion.div
                 key={plan.name}
-                className="relative rounded-3xl p-6 flex flex-col hover:shadow-2xl transition-all hover:-translate-y-1"
+                className="relative rounded-3xl p-6 flex flex-col"
                 style={{
                   background: plan.bg,
                   color: plan.color,
@@ -91,6 +98,11 @@ export function SubscriptionPlans() {
                     ? "0 20px 60px rgba(128,51,204,0.3)"
                     : undefined,
                 }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                whileHover={{ y: -6, transition: { duration: 0.25 } }}
               >
                 {plan.popular && (
                   <div
@@ -172,12 +184,18 @@ export function SubscriptionPlans() {
                 >
                   اشترك الآن
                 </button>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Image */}
-          <div className="w-full lg:w-2/5">
+          <motion.div
+            className="w-full lg:w-2/5"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+          >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img
                 src={kidsTabletImage}
@@ -197,7 +215,7 @@ export function SubscriptionPlans() {
                 </h3>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

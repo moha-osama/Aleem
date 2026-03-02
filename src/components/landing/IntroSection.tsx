@@ -2,6 +2,7 @@ import spaceImg from "/space.png";
 import floatingGrad1 from "/floating-grad1.png";
 import floatingGrad2 from "/floating-grad2.png";
 import doubleQuote from "/double-quote.png";
+import { motion } from "framer-motion";
 
 export function IntroSection() {
   return (
@@ -47,7 +48,13 @@ export function IntroSection() {
       <div className="relative max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-12">
           {/* ── Right side: Text (RTL → appears on the right) ── */}
-          <div className="w-full md:w-1/2 flex flex-col items-end text-right">
+          <motion.div
+            className="w-full md:w-1/2 flex flex-col items-end text-right"
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             {/* Heading */}
             <h2
               className="text-3xl md:text-4xl lg:text-5xl mb-5 leading-snug"
@@ -153,16 +160,22 @@ export function IntroSection() {
               </span>
               شاهد الفيديو
             </a>
-          </div>
+          </motion.div>
 
           {/* ── Left side: Image ── */}
-          <div className="w-full md:w-1/2 flex justify-center">
+          <motion.div
+            className="w-full md:w-1/2 flex justify-center"
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+          >
             <img
               src={spaceImg}
               alt="IBAL Space"
               className="w-full max-w-lg rounded-3xl object-contain drop-shadow-2xl"
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import news1 from "/news1.png";
 import news2 from "/news2.png";
 import news3 from "/news3.png";
+import { motion } from "framer-motion";
 
 const news = [
   {
@@ -43,7 +44,13 @@ export function LatestNews() {
     <section id="news" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6 }}
+        >
           <h2
             className="text-3xl md:text-4xl text-[#2D1F6E] mb-3"
             style={{ fontWeight: 800 }}
@@ -60,13 +67,18 @@ export function LatestNews() {
           >
             تابع آخر أخبار ومستجدات منصة عليم التعليمية
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {news.map((item) => (
-            <article
-              key={item.title}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 border border-gray-100 group cursor-pointer"
+          {news.map((item, i) => (
+            <motion.article
+              key={item.title + i}
+              className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group cursor-pointer"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
+              whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.12)", transition: { duration: 0.25 } }}
             >
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -109,7 +121,7 @@ export function LatestNews() {
                   اقرأ المزيد ←
                 </a>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
 

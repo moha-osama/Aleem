@@ -1,6 +1,7 @@
 ﻿import mobileApp from "/mobile-app.png";
 import googlePlayBadge from "/google play.png";
 import appStoreBadge from "/app store.png";
+import { motion } from "framer-motion";
 
 const downloadButtons = [
   {
@@ -58,7 +59,13 @@ export function AppDownload() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-end gap-12">
           {/* Right side: Text and Buttons */}
-          <div className="w-full md:w-1/2 text-white flex flex-col items-start self-center pb-20">
+          <motion.div
+            className="w-full md:w-1/2 text-white flex flex-col items-start self-center pb-20"
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
               <span className="text-yellow-200 text-sm font-semibold">
                 {" "}
@@ -98,10 +105,16 @@ export function AppDownload() {
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Left side: Store badges + Phone */}
-          <div className="w-full md:w-1/2 flex flex-col items-center justify-end gap-6">
+          <motion.div
+            className="w-full md:w-1/2 flex flex-col items-center justify-end gap-6"
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+          >
             {/* Store badges */}
             <div className="flex items-center gap-4">
               <a href="#" className="transition-transform hover:scale-105">
@@ -132,7 +145,7 @@ export function AppDownload() {
                 className="relative z-10 w-72 md:w-[40rem] drop-shadow-2xl"
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

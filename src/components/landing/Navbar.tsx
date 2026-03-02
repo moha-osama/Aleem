@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "/logo.png";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
   onLoginClick?: () => void;
@@ -18,6 +19,17 @@ export function Navbar({ onLoginClick }: NavbarProps) {
     { label: "التسعير", href: "#pricing" },
     { label: "أخبارنا", href: "#news" },
   ];
+
+  const scrollToSection = (href: string) => {
+    const id = href.replace("#", "");
+    const el = document.getElementById(id);
+    if (el) {
+      const navbarOffset = 110;
+      const top =
+        el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
 
   return (
     <>
@@ -37,7 +49,11 @@ export function Navbar({ onLoginClick }: NavbarProps) {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-white hover:text-[#FAA52F] text-sm transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(link.href);
+                  }}
+                  className="text-white hover:text-[#FAA52F] text-sm transition-colors cursor-pointer"
                 >
                   {link.label}
                 </a>
@@ -54,6 +70,10 @@ export function Navbar({ onLoginClick }: NavbarProps) {
               </button>
               <a
                 href="#download"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("#download");
+                }}
                 className="bg-[#FAA52F] text-white px-5 py-3.5 rounded-full text-sm hover:bg-[#e8941e] transition-colors cursor-pointer"
               >
                 تحميل التطبيق
@@ -73,22 +93,29 @@ export function Navbar({ onLoginClick }: NavbarProps) {
       </nav>
 
       {/* Mobile Drawer Overlay */}
-      <div
-        className={`fixed inset-0 z-[60] transition-opacity duration-300 md:hidden ${
-          mobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        onClick={() => setMobileOpen(false)}
-      />
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="fixed inset-0 z-[60] md:hidden"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Mobile Slide-in Drawer (from left) */}
-      <div
-        className={`fixed top-0 left-0 h-full w-72 z-[70] flex flex-col bg-[#6F267A] shadow-2xl transition-transform duration-300 ease-in-out md:hidden`}
-        style={{
-          transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
-        }}
+      <AnimatePresence>
+        {mobileOpen && (
+      <motion.div
+        className="fixed top-0 left-0 h-full w-72 z-[70] flex flex-col bg-[#6F267A] shadow-2xl md:hidden"
+        initial={{ x: "-100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "-100%" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/20">
@@ -111,7 +138,11 @@ export function Navbar({ onLoginClick }: NavbarProps) {
               key={link.label}
               href={link.href}
               className="flex items-center px-6 py-3.5 text-white hover:text-[#FAA52F] hover:bg-white/10 text-sm border-b border-white/10 transition-colors"
-              onClick={() => setMobileOpen(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileOpen(false);
+                scrollToSection(link.href);
+              }}
             >
               {link.label}
             </a>
@@ -131,13 +162,19 @@ export function Navbar({ onLoginClick }: NavbarProps) {
           </button>
           <a
             href="#download"
-            onClick={() => setMobileOpen(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              setMobileOpen(false);
+              scrollToSection("#download");
+            }}
             className="w-full text-center bg-[#FAA52F] text-white py-2.5 rounded-full text-sm hover:bg-[#e8941e] transition-colors"
           >
             تحميل التطبيق
           </a>
         </div>
-      </div>
+      </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

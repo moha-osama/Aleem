@@ -1,5 +1,6 @@
 import heroSvg from "/hero-svg.png";
 import heroBg from "/hero-img.jpeg";
+import { motion } from "framer-motion";
 
 export function Hero() {
   return (
@@ -39,40 +40,54 @@ export function Hero() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex items-center min-h-[calc(100vh-4rem)]">
         <div className="w-full flex flex-col items-center text-center text-white">
           {/* Heading */}
-          <h1
+          <motion.h1
             className="text-4xl md:text-5xl lg:text-6xl text-white mb-6"
             style={{ fontWeight: 800, lineHeight: 1.4 }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
           >
             مرحباً بك في <span className="text-yellow-300">IBAL</span>
-          </h1>
+          </motion.h1>
 
           {/* Sub-heading */}
-          <p
+          <motion.p
             className="text-white/90 text-xl md:text-2xl mb-4 max-w-2xl"
             style={{ fontWeight: 600 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
           >
             ألعاب IBAL التفاعلية الرقمية للمنهاج الفلسطيني
-          </p>
+          </motion.p>
 
           {/* Description */}
-          <p
+          <motion.p
             className="text-white/75 text-base md:text-lg mb-10 max-w-xl"
             style={{ fontWeight: 400 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
           >
             تعلم بذكاء واستمتع بتجربة تعليمية فريدة من نوعها
-          </p>
+          </motion.p>
 
           {/* CTA Button */}
-          <a
+          <motion.a
             href="#stages"
             className="text-white px-10 py-3 rounded-full transition-all shadow-lg hover:shadow-xl text-lg"
             style={{
               fontWeight: 700,
               background: "linear-gradient(135deg, #FF006E 0%, #FB5607 100%)",
             }}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.75 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
           >
             أكتشف المزيد
-          </a>
+          </motion.a>
         </div>
       </div>
 

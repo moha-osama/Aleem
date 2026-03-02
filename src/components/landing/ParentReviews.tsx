@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const parentImage = "/review.jpeg";
 
 const reviews = [
@@ -35,7 +37,13 @@ export function ParentReviews() {
     <section id="reviews" className="py-16" style={{ background: "#FAFAFA" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6 }}
+        >
           <h2
             className="text-3xl md:text-4xl text-[#2D1F6E] mb-3"
             style={{ fontWeight: 800 }}
@@ -52,11 +60,17 @@ export function ParentReviews() {
           >
             ماذا يقول آباء الطلاب عن تجربتهم معنا
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-10 items-center">
           {/* Image */}
-          <div className="w-full lg:w-2/5">
+          <motion.div
+            className="w-full lg:w-2/5"
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img
                 src={parentImage}
@@ -82,14 +96,18 @@ export function ParentReviews() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Reviews */}
           <div className="w-full lg:w-3/5 flex flex-col gap-5">
-            {reviews.map((review) => (
-              <div
+            {reviews.map((review, i) => (
+              <motion.div
                 key={review.name}
-                className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-gray-100"
+                className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md border border-gray-100"
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
               >
                 <div className="flex items-start gap-4 flex-row-reverse">
                   <div
@@ -126,7 +144,7 @@ export function ParentReviews() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

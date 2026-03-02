@@ -1,6 +1,7 @@
 ﻿import game1 from "/game1.png";
 import game2 from "/game2.png";
 import game3 from "/game3.png";
+import { motion } from "framer-motion";
 
 const gameCards = [
   {
@@ -46,7 +47,13 @@ export function EducationalGames() {
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6 }}
+        >
           <h2
             className="text-3xl md:text-4xl text-[#2D1F6E] mb-3"
             style={{ fontWeight: 800 }}
@@ -64,14 +71,19 @@ export function EducationalGames() {
             اكتشف مجموعة واسعة من الألعاب التفاعلية المصممة لجعل التعلم تجربة
             ممتعة
           </p>
-        </div>
+        </motion.div>
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {gameCards.map((card, i) => (
-            <div
+            <motion.div
               key={i}
-              className="group rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white"
+              className="group rounded-3xl overflow-hidden shadow-md hover:shadow-2xl bg-white"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
+              whileHover={{ y: -8, transition: { duration: 0.25 } }}
             >
               {/* Game image */}
               <div className="relative overflow-hidden h-64">
@@ -155,7 +167,7 @@ export function EducationalGames() {
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

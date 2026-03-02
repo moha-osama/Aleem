@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const stats = [
   { value: "+5,000", label: "مشترك" },
@@ -20,7 +21,7 @@ function formatNumber(n: number, hasComma: boolean) {
   return hasComma ? n.toLocaleString("en-US") : n.toString();
 }
 
-function StatCard({ stat }: { stat: { value: string; label: string } }) {
+function StatCard({ stat, index }: { stat: { value: string; label: string }; index: number }) {
   const { prefix, numeric, hasComma } = parseValue(stat.value);
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -52,7 +53,14 @@ function StatCard({ stat }: { stat: { value: string; label: string } }) {
   }, [numeric]);
 
   return (
-    <div ref={ref} className="text-white">
+    <motion.div
+      ref={ref}
+      className="text-white"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+    >
       <div
         className="text-3xl md:text-4xl text-yellow-300"
         style={{ fontWeight: 800 }}
@@ -63,7 +71,7 @@ function StatCard({ stat }: { stat: { value: string; label: string } }) {
       <div className="text-white/80 text-sm mt-1" style={{ fontWeight: 500 }}>
         {stat.label}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -76,11 +84,17 @@ export function Stats() {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 text-center">
-          {stats.map((stat) => (
-            <StatCard key={stat.label} stat={stat} />
+        <motion.div
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.1 }}
+        >
+          {stats.map((stat, i) => (
+            <StatCard key={stat.label} stat={stat} index={i} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

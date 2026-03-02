@@ -1,4 +1,5 @@
 import compImg from "/compImg.jpeg";
+import { motion } from "framer-motion";
 
 const slides = [
   {
@@ -70,7 +71,13 @@ export function CompetitiveSection() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="flex justify-center mb-5">
             <span
               className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm"
@@ -127,18 +134,22 @@ export function CompetitiveSection() {
             <br />
             في تحديات مباشرة مليئة بالحماس والتعلم.
           </p>
-        </div>
+        </motion.div>
 
         {/* Alternating rows */}
         <div className="flex flex-col gap-16" dir="rtl">
           {slides.map((slide, i) => {
             const isEven = i % 2 === 0;
             return (
-              <div
+              <motion.div
                 key={slide.src}
                 className={`flex flex-col ${
                   isEven ? "md:flex-row" : "md:flex-row-reverse"
                 } items-center gap-8 md:gap-12`}
+                initial={{ opacity: 0, x: isEven ? -60 : 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
               >
                 {/* Image */}
                 <div className="w-full md:w-1/2 flex-shrink-0">
@@ -214,7 +225,7 @@ export function CompetitiveSection() {
                     {slide.desc}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
