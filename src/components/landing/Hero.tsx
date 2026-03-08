@@ -24,7 +24,7 @@ export function Hero() {
         loop
         muted
         onCanPlay={() => setVideoReady(true)}
-        className="fixed inset-0 w-full h-full object-fill transition-opacity duration-700"
+        className="fixed inset-0 w-full h-full object-cover transition-opacity duration-700"
         style={{ zIndex: -1, opacity: videoReady ? 1 : 0 }}
       />
       {/* Background image — fixed so it stays behind the entire page while scrolling */}
