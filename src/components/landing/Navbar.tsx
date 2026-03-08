@@ -38,7 +38,7 @@ export function Navbar({ onLoginClick }: NavbarProps) {
           <div className="flex items-center justify-between h-16">
             {/* Logo (right side in RTL) with white background */}
             <div className="flex items-center">
-              <div className=" rounded-full px-3 py-1.5 flex items-center gap-1  h-16">
+              <div className=" rounded-full px-3 py-1.5 flex items-center gap-1 w-34 h-16">
                 <img
                   src={logo}
                   alt="Logo"

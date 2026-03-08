@@ -23,6 +23,7 @@ export function Hero() {
         autoPlay
         loop
         muted
+        playsInline
         onCanPlay={() => setVideoReady(true)}
         className="fixed inset-0 w-full h-full object-cover transition-opacity duration-700"
         style={{ zIndex: -1, opacity: videoReady ? 1 : 0 }}
