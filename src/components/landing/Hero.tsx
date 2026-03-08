@@ -2,18 +2,30 @@ import heroSvg from "/hero-svg.png";
 import heroBg from "/hero-img.png";
 import heroVideo from "/hero-bg-video.mp4";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 export function Hero() {
+  const [videoReady, setVideoReady] = useState(false);
+
   return (
     <section id="hero" className="relative min-h-screen pt-16">
-      {/* Background video — fixed so it stays behind the entire page while scrolling */}
+      {/* Background image — shown until video is ready */}
+      <img
+        src={heroBg}
+        alt=""
+        aria-hidden="true"
+        className="fixed inset-0 w-full h-full object-cover transition-opacity duration-700"
+        style={{ zIndex: -1, opacity: videoReady ? 0 : 1 }}
+      />
+      {/* Background video */}
       <video
         src={heroVideo}
         autoPlay
         loop
         muted
-        className="fixed inset-0 w-full h-full object-fill"
-        style={{ zIndex: -1 }}
+        onCanPlay={() => setVideoReady(true)}
+        className="fixed inset-0 w-full h-full object-fill transition-opacity duration-700"
+        style={{ zIndex: -1, opacity: videoReady ? 1 : 0 }}
       />
       {/* Background image — fixed so it stays behind the entire page while scrolling */}
       {/* <img
