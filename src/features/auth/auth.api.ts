@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { apiClient } from "@/api/client";
+import { parseWithSchema } from "@/api/parseWithSchema";
+import type { RequestOptions } from "@/api/types";
 import {
   apiDetailResponseSchema,
   authUserSchema,
@@ -22,22 +23,10 @@ import type {
   RegisterAccountResponse,
   RegisterStudentRequest,
   RegisterTeacherRequest,
-  RequestOptions,
   SchoolUserRoleFilter,
   SchoolUsersResult,
   UpdateMeRequest,
 } from "./auth.types";
-
-// Feature-scoped API functions prevent components from making raw HTTP calls.
-const ENABLE_API_RESPONSE_VALIDATION =
-  import.meta.env.DEV || import.meta.env.VITE_ENABLE_API_VALIDATION === "true";
-
-function parseWithSchema<T>(schema: z.ZodType<T>, data: unknown): T {
-  if (!ENABLE_API_RESPONSE_VALIDATION) {
-    return data as T;
-  }
-  return schema.parse(data);
-}
 
 export async function login(
   payload: LoginRequest,

@@ -5,6 +5,7 @@ import {
   type UseMutationResult,
   type UseQueryResult,
 } from "@tanstack/react-query";
+import type { MutationWithSignal } from "@/api/types";
 import {
   createGame,
   createGameQuestion,
@@ -24,8 +25,6 @@ import type {
   UpdateGameQuestionRequest,
   UpdateGameRequest,
 } from "./games.types";
-
-type MutationWithSignal<T> = T & { signal?: AbortSignal };
 
 export const gamesQueryKeys = {
   all: ["games"] as const,

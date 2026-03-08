@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { apiClient } from "@/api/client";
+import { parseWithSchema } from "@/api/parseWithSchema";
+import type { RequestOptions } from "@/api/types";
 import {
   difficultyLevelSchema,
   difficultyLevelsSchema,
@@ -15,21 +16,9 @@ import type {
   DifficultyLevelFilters,
   Exam,
   ExamFilters,
-  RequestOptions,
   UpdateDifficultyLevelRequest,
   UpdateExamRequest,
 } from "./exams.types";
-
-const ENABLE_API_RESPONSE_VALIDATION =
-  import.meta.env.DEV || import.meta.env.VITE_ENABLE_API_VALIDATION === "true";
-
-function parseWithSchema<T>(schema: z.ZodType<T>, data: unknown): T {
-  if (!ENABLE_API_RESPONSE_VALIDATION) {
-    return data as T;
-  }
-
-  return schema.parse(data);
-}
 
 export async function listExams(
   filters?: ExamFilters,

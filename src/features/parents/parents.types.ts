@@ -15,7 +15,3 @@ export interface LinkParentChildResponse {
   detail: string;
   student_id: number;
 }
-
-export interface RequestOptions {
-  signal?: AbortSignal;
-}

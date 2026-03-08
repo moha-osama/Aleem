@@ -6,6 +6,7 @@ import {
   type UseQueryResult,
 } from "@tanstack/react-query";
 import { tokenStorage } from "@/api/client";
+import type { MutationWithSignal } from "@/api/types";
 import {
   changePassword,
   deactivateSchoolUser,
@@ -35,9 +36,6 @@ import type {
   SchoolUsersResult,
   UpdateMeRequest,
 } from "./auth.types";
-
-// Hooks encapsulate server-state concerns (caching, invalidation, token lifecycle) per feature.
-type MutationWithSignal<T> = T & { signal?: AbortSignal };
 
 export type SignupInput =
   | {

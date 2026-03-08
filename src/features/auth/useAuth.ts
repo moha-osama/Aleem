@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { tokenStorage, type ApiClientError } from "@/api/client";
 import { authQueryKeys, useLogout, useMe } from "./auth.hooks";
@@ -22,7 +22,7 @@ export function useAuth(): UseAuthResult {
   const isAuthenticated = Boolean(accessToken && meQuery.data);
   const role = meQuery.data?.role ?? null;
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     const refreshToken = tokenStorage.getRefreshToken();
 
     if (refreshToken) {
@@ -36,14 +36,14 @@ export function useAuth(): UseAuthResult {
       tokenStorage.clearTokens();
       queryClient.removeQueries({ queryKey: authQueryKeys.all });
     }
-  };
+  }, [logoutMutation, queryClient]);
 
   return useMemo(
     () => ({
       user: meQuery.data,
       role,
       isAuthenticated,
-      isCheckingAuth: meQuery.isLoading || meQuery.isFetching,
+      isCheckingAuth: meQuery.isLoading,
       isLogoutPending: logoutMutation.isPending,
       logout,
     }),
@@ -52,7 +52,6 @@ export function useAuth(): UseAuthResult {
       logout,
       logoutMutation.isPending,
       meQuery.data,
-      meQuery.isFetching,
       meQuery.isLoading,
       role,
     ],
@@ -72,8 +71,26 @@ export function toApiErrorMessage(error: unknown): string {
 
   const apiError = error as ApiClientError;
 
-  if (apiError.payload && typeof apiError.payload.detail === "string") {
-    return apiError.payload.detail;
+  if (apiError.payload) {
+    const { detail, ...rest } = apiError.payload;
+
+    if (typeof detail === "string" && detail.length > 0) {
+      return detail;
+    }
+
+    // Handle field errors like { non_field_errors: ["msg"], username: ["msg"] }
+    for (const value of Object.values(rest)) {
+      if (typeof value === "string" && value.length > 0) {
+        return value;
+      }
+      if (
+        Array.isArray(value) &&
+        typeof value[0] === "string" &&
+        value[0].length > 0
+      ) {
+        return value[0];
+      }
+    }
   }
 
   if (typeof apiError.message === "string" && apiError.message.length > 0) {

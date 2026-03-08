@@ -5,6 +5,7 @@ import {
   type UseMutationResult,
   type UseQueryResult,
 } from "@tanstack/react-query";
+import type { MutationWithSignal } from "@/api/types";
 import {
   addExamQuestions,
   createDifficultyLevel,
@@ -30,8 +31,6 @@ import type {
   UpdateDifficultyLevelRequest,
   UpdateExamRequest,
 } from "./exams.types";
-
-type MutationWithSignal<T> = T & { signal?: AbortSignal };
 
 export const examsQueryKeys = {
   all: ["exams"] as const,

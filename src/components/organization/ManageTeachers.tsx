@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,21 +10,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
+  displayName,
   toApiErrorMessage,
   useDeactivateSchoolUser,
   useRegisterTeacher,
   useSchoolUsers,
-  type SchoolUserSummary,
 } from "@/features/auth";
 import { useEducationSubjects } from "@/features/education";
-
-function teacherDisplayName(teacher: SchoolUserSummary): string {
-  const fullName =
-    `${teacher.first_name ?? ""} ${teacher.last_name ?? ""}`.trim();
-  return fullName || teacher.username;
-}
+import SchoolUsersTable from "./SchoolUsersTable";
 
 export default function ManageTeachers() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,7 +49,7 @@ export default function ManageTeachers() {
     const needle = searchQuery.trim().toLowerCase();
     if (!needle) return teachers;
     return teachers.filter((t) => {
-      const name = teacherDisplayName(t).toLowerCase();
+      const name = displayName(t).toLowerCase();
       const user = t.username.toLowerCase();
       const mail = (t.email ?? "").toLowerCase();
       return (
@@ -134,91 +128,18 @@ export default function ManageTeachers() {
         />
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  الإجراءات
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  الحالة
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  البريد الإلكتروني
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  اسم المستخدم
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  الاسم
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredTeachers.map((teacher) => (
-                <tr
-                  key={teacher.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 justify-end">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        disabled={deactivateMutation.isPending}
-                        onClick={() => {
-                          void deactivateMutation.mutateAsync({
-                            userId: teacher.id,
-                          });
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Badge
-                      variant={
-                        teacher.is_active === false ? "secondary" : "default"
-                      }
-                      className={
-                        teacher.is_active === false
-                          ? ""
-                          : "bg-green-100 text-green-700 hover:bg-green-100"
-                      }
-                    >
-                      {teacher.is_active === false ? "غير نشط" : "نشط"}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{teacher.email}</td>
-                  <td className="px-6 py-4 text-gray-700">
-                    {teacher.username}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-gray-900">
-                      {teacherDisplayName(teacher)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {!teachersQuery.isLoading && filteredTeachers.length === 0 && (
-          <div className="px-6 py-8 text-center text-sm text-gray-500 border-t border-gray-200">
-            لا يوجد معلمون مطابقون حالياً.
-          </div>
-        )}
-
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
-          عرض {filteredTeachers.length} من {teachers.length} معلم
-        </div>
-      </div>
+      <SchoolUsersTable
+        items={filteredTeachers}
+        totalCount={teachers.length}
+        isLoading={teachersQuery.isLoading}
+        emptyMessage="لا يوجد معلمون مطابقون حالياً."
+        countLabel="معلم"
+        canDeactivate
+        onDeactivate={(userId) =>
+          void deactivateMutation.mutateAsync({ userId })
+        }
+        isDeactivatePending={deactivateMutation.isPending}
+      />
 
       {/* Register Teacher Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={handleCreateOpenChange}>

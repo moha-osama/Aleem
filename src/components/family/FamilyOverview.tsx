@@ -15,6 +15,7 @@ export default function FamilyOverview() {
   const { data: parentChildren } = useParentChildren();
   const { data: gamesData } = useGames();
 
+  // TODO: Replace hardcoded totalAchievements & weeklyHours with real API data
   const familyStats = {
     totalChildren: parentChildren?.length ?? 0,
     activeGames: gamesData?.length ?? 0,
@@ -22,6 +23,7 @@ export default function FamilyOverview() {
     weeklyHours: 8.5,
   };
 
+  // TODO: Replace hardcoded children/recentGames/recentAchievements with API data from parentChildren
   const children = [
     {
       id: "1",

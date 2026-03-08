@@ -1,7 +1,3 @@
-export interface RequestOptions {
-  signal?: AbortSignal;
-}
-
 export interface ExamQuestionRef {
   id?: number;
   eq_id?: number;

@@ -110,6 +110,7 @@ export interface DeactivateSchoolUserParams {
   userId: number;
 }
 
-export interface RequestOptions {
-  signal?: AbortSignal;
+export function displayName(user: SchoolUserSummary): string {
+  const fullName = `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim();
+  return fullName || user.username;
 }

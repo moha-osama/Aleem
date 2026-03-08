@@ -1,7 +1,3 @@
-export interface RequestOptions {
-  signal?: AbortSignal;
-}
-
 export interface Game {
   id: number;
   name?: string;

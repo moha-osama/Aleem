@@ -5,14 +5,13 @@ import {
   type UseMutationResult,
   type UseQueryResult,
 } from "@tanstack/react-query";
+import type { MutationWithSignal } from "@/api/types";
 import { getParentChildren, linkParentChild } from "./parents.api";
 import type {
   LinkParentChildRequest,
   LinkParentChildResponse,
   ParentChild,
 } from "./parents.types";
-
-type MutationWithSignal<T> = T & { signal?: AbortSignal };
 
 export const parentQueryKeys = {
   all: ["parents"] as const,

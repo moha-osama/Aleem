@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,22 +15,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
+  displayName,
   toApiErrorMessage,
   useAuth,
   useDeactivateSchoolUser,
   useRegisterStudent,
   useSchoolUsers,
-  type SchoolUserSummary,
 } from "@/features/auth";
 import { useEducationLevels, useEducationStages } from "@/features/education";
-
-function studentDisplayName(student: SchoolUserSummary): string {
-  const fullName =
-    `${student.first_name ?? ""} ${student.last_name ?? ""}`.trim();
-  return fullName || student.username;
-}
+import SchoolUsersTable from "./SchoolUsersTable";
 
 export default function ManageStudents() {
   const { role } = useAuth();
@@ -78,7 +72,7 @@ export default function ManageStudents() {
     }
 
     return students.filter((student) => {
-      const name = studentDisplayName(student).toLowerCase();
+      const name = displayName(student).toLowerCase();
       const user = student.username.toLowerCase();
       const mail = (student.email ?? "").toLowerCase();
       return (
@@ -163,92 +157,18 @@ export default function ManageStudents() {
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  الإجراءات
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  الحالة
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  البريد الإلكتروني
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  اسم المستخدم
-                </th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-900">
-                  الاسم
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredStudents.map((student) => (
-                <tr
-                  key={student.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 justify-end">
-                      {canDeactivate && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          disabled={deactivateStudentMutation.isPending}
-                          onClick={() => {
-                            void deactivateStudentMutation.mutateAsync({
-                              userId: student.id,
-                            });
-                          }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Badge
-                      variant={
-                        student.is_active === false ? "secondary" : "default"
-                      }
-                      className={
-                        student.is_active === false
-                          ? ""
-                          : "bg-green-100 text-green-700 hover:bg-green-100"
-                      }
-                    >
-                      {student.is_active === false ? "غير نشط" : "نشط"}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{student.email}</td>
-                  <td className="px-6 py-4 text-gray-700">
-                    {student.username}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-gray-900">
-                      {studentDisplayName(student)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {!studentsQuery.isLoading && filteredStudents.length === 0 && (
-          <div className="px-6 py-8 text-center text-sm text-gray-500 border-t border-gray-200">
-            لا يوجد طلاب مطابقون حالياً.
-          </div>
-        )}
-
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
-          عرض {filteredStudents.length} من {students.length} طالب
-        </div>
-      </div>
+      <SchoolUsersTable
+        items={filteredStudents}
+        totalCount={students.length}
+        isLoading={studentsQuery.isLoading}
+        emptyMessage="لا يوجد طلاب مطابقون حالياً."
+        countLabel="طالب"
+        canDeactivate={canDeactivate}
+        onDeactivate={(userId) =>
+          void deactivateStudentMutation.mutateAsync({ userId })
+        }
+        isDeactivatePending={deactivateStudentMutation.isPending}
+      />
 
       <Dialog open={isCreateOpen} onOpenChange={handleCreateOpenChange}>
         <DialogContent className="sm:max-w-2xl" dir="rtl">

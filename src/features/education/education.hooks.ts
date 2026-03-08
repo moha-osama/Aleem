@@ -5,6 +5,7 @@ import {
   type UseMutationResult,
   type UseQueryResult,
 } from "@tanstack/react-query";
+import type { MutationWithSignal } from "@/api/types";
 import {
   createEducationLevel,
   createEducationStage,
@@ -32,8 +33,6 @@ import type {
   UpdateEducationStageRequest,
   UpdateEducationSubjectRequest,
 } from "./education.types";
-
-type MutationWithSignal<T> = T & { signal?: AbortSignal };
 
 export const educationQueryKeys = {
   all: ["education"] as const,

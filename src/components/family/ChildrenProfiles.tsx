@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import ChildProfileCard from "./ChildProfileCard";
 import AddChildProfile from "./AddChildProfile";
-import { toApiErrorMessage, useAuth } from "@/features/auth";
+import { useAuth, useRegisterStudent } from "@/features/auth";
+import type { RegisterStudentRequest } from "@/features/auth";
 import { useLinkParentChild, useParentChildren } from "@/features/parents";
 import { getDashboardConfig } from "./dashboardConfig";
 
@@ -13,10 +14,15 @@ export default function ChildrenProfiles() {
   const [showAddChild, setShowAddChild] = useState(false);
 
   const childrenQuery = useParentChildren();
+  const registerStudentMutation = useRegisterStudent();
   const linkChildMutation = useLinkParentChild();
 
-  const handleAddChild = async (username: string) => {
-    await linkChildMutation.mutateAsync({ username });
+  const isSubmitting =
+    registerStudentMutation.isPending || linkChildMutation.isPending;
+
+  const handleAddChild = async (data: RegisterStudentRequest) => {
+    await registerStudentMutation.mutateAsync(data);
+    await linkChildMutation.mutateAsync({ username: data.username });
     setShowAddChild(false);
   };
 
@@ -32,7 +38,7 @@ export default function ChildrenProfiles() {
         </div>
         <Button
           onClick={() => setShowAddChild(true)}
-          disabled={linkChildMutation.isPending}
+          disabled={isSubmitting}
           className="bg-linear-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7C3AED] hover:to-[#DB2777] text-white"
         >
           <Plus className="w-5 h-5 ml-2" />
@@ -80,7 +86,7 @@ export default function ChildrenProfiles() {
         open={showAddChild}
         onClose={() => setShowAddChild(false)}
         onAdd={handleAddChild}
-        isSubmitting={linkChildMutation.isPending}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

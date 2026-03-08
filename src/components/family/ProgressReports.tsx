@@ -20,6 +20,7 @@ export default function ProgressReports() {
   const [selectedChild, setSelectedChild] = useState("all");
   const [timePeriod, setTimePeriod] = useState("week");
 
+  // TODO: Replace hardcoded childrenProgress with real API data
   const childrenProgress = [
     {
       id: "1",

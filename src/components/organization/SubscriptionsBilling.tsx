@@ -95,7 +95,7 @@ export default function SubscriptionsBilling() {
           </Button>
           <Button
             variant="outline"
-            className="text-white border-white hover:bg-white/10"
+            className="text-black border-white hover:bg-white/10"
           >
             تحديث طريقة الدفع
           </Button>
