@@ -34,8 +34,8 @@ export function AppDownload() {
           "linear-gradient(-90deg, #8033CC 0%, #CC66CC 50%, #E085C2 100%)",
       }}
     >
-      {/* Decorative circles */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+      {/* Decorative circles + star dots as CSS gradient — replaces 18 DOM nodes */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10"
           style={{ background: "#ffffff" }}
@@ -44,16 +44,22 @@ export function AppDownload() {
           className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full opacity-10"
           style={{ background: "#ffffff" }}
         />
-        {[...Array(18)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-white opacity-40"
-            style={{
-              top: `${(i * 19 + 5) % 90}%`,
-              left: `${(i * 27 + 11) % 100}%`,
-            }}
-          />
-        ))}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(1px 1px at 11% 5%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 38% 24%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 65% 43%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 92% 62%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 19% 81%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 46% 10%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 73% 29%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 100% 48%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 27% 67%, rgba(255,255,255,0.4) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 54% 86%, rgba(255,255,255,0.4) 50%, transparent 50%)",
+          }}
+        />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -121,6 +127,7 @@ export function AppDownload() {
                 <img
                   src={appStoreBadge}
                   alt="App Store"
+                  loading="lazy"
                   className="h-12 rounded-xl shadow-lg"
                 />
               </a>
@@ -128,6 +135,7 @@ export function AppDownload() {
                 <img
                   src={googlePlayBadge}
                   alt="Google Play"
+                  loading="lazy"
                   className="h-12 rounded-xl shadow-lg"
                 />
               </a>
@@ -142,6 +150,7 @@ export function AppDownload() {
               <img
                 src={mobileApp}
                 alt="تطبيق IBAL"
+                loading="lazy"
                 className="relative z-10 w-72 md:w-[40rem] drop-shadow-2xl"
               />
             </div>

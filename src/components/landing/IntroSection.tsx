@@ -11,29 +11,12 @@ export function IntroSection() {
       className="relative overflow-hidden py-20 px-4"
       style={{ background: "#F4D8FF" }}
     >
-      {/* Keyframe animations */}
-      <style>{`
-        @keyframes floatRandom1 {
-          0%   { transform: translate(0px, 0px) scale(1); }
-          25%  { transform: translate(40px, -30px) scale(1.05); }
-          50%  { transform: translate(-20px, 50px) scale(0.95); }
-          75%  { transform: translate(60px, 20px) scale(1.03); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        @keyframes floatRandom2 {
-          0%   { transform: translate(0px, 0px) scale(1); }
-          25%  { transform: translate(-50px, 30px) scale(1.04); }
-          50%  { transform: translate(30px, -40px) scale(0.97); }
-          75%  { transform: translate(-30px, -20px) scale(1.02); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-      `}</style>
-
-      {/* Floating gradient blobs */}
+      {/* Floating gradient blobs (keyframes in index.css) */}
       <img
         src={floatingGrad1}
         alt=""
         aria-hidden="true"
+        loading="lazy"
         className="absolute top-0 right-0 w-96 h-96 pointer-events-none select-none"
         style={{ animation: "floatRandom1 12s ease-in-out infinite" }}
       />
@@ -41,6 +24,7 @@ export function IntroSection() {
         src={floatingGrad2}
         alt=""
         aria-hidden="true"
+        loading="lazy"
         className="absolute bottom-0 left-0 w-96 h-96 pointer-events-none select-none"
         style={{ animation: "floatRandom2 15s ease-in-out infinite" }}
       />
@@ -173,6 +157,7 @@ export function IntroSection() {
             <img
               src={spaceImg}
               alt="IBAL Space"
+              loading="lazy"
               className="w-full max-w-lg rounded-3xl object-contain drop-shadow-2xl"
             />
           </motion.div>

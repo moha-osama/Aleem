@@ -200,6 +200,7 @@ export function SubscriptionPlans() {
               <img
                 src={kidsTabletImage}
                 alt="أطفال يتعلمون"
+                loading="lazy"
                 className="w-full h-80 object-cover"
               />
               <div

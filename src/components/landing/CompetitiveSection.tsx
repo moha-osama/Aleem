@@ -31,7 +31,7 @@ export function CompetitiveSection() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Animated background particles */}
+      {/* Animated background glow + star dots via CSS gradients */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute w-96 h-96 rounded-full opacity-20"
@@ -51,22 +51,28 @@ export function CompetitiveSection() {
             animation: "pulse 3s ease-in-out infinite 1s",
           }}
         />
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={`star-${i}`}
-            className="absolute rounded-full"
-            style={{
-              width: `${(i % 3) + 1}px`,
-              height: `${(i % 3) + 1}px`,
-              top: `${(i * 17 + 5) % 100}%`,
-              left: `${(i * 23 + 7) % 100}%`,
-              background:
-                i % 3 === 0 ? "#F59E0B" : i % 3 === 1 ? "#A855F7" : "white",
-              opacity: 0.6,
-              animation: `twinkle ${2 + (i % 3)}s ease-in-out infinite ${i % 2}s`,
-            }}
-          />
-        ))}
+        {/* Star particles as single CSS background — replaces 30 DOM nodes */}
+        <div
+          className="absolute inset-0 landing-twinkle"
+          style={{
+            backgroundImage:
+              "radial-gradient(1.5px 1.5px at 7% 5%, rgba(245,158,11,0.6) 50%, transparent 50%), " +
+              "radial-gradient(2px 2px at 30% 22%, rgba(168,85,247,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 53% 39%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1.5px 1.5px at 76% 56%, rgba(245,158,11,0.6) 50%, transparent 50%), " +
+              "radial-gradient(2px 2px at 99% 73%, rgba(168,85,247,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 22% 10%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1.5px 1.5px at 45% 27%, rgba(245,158,11,0.6) 50%, transparent 50%), " +
+              "radial-gradient(2px 2px at 68% 44%, rgba(168,85,247,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 91% 61%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1.5px 1.5px at 14% 78%, rgba(245,158,11,0.6) 50%, transparent 50%), " +
+              "radial-gradient(2px 2px at 37% 95%, rgba(168,85,247,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 60% 12%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1.5px 1.5px at 83% 29%, rgba(245,158,11,0.6) 50%, transparent 50%), " +
+              "radial-gradient(2px 2px at 6% 46%, rgba(168,85,247,0.6) 50%, transparent 50%), " +
+              "radial-gradient(1px 1px at 29% 63%, rgba(255,255,255,0.6) 50%, transparent 50%)",
+          }}
+        />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -166,6 +172,7 @@ export function CompetitiveSection() {
                     <img
                       src={slide.src}
                       alt={slide.label}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </div>

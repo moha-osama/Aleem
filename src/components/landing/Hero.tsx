@@ -14,6 +14,7 @@ export function Hero() {
         src={heroBg}
         alt=""
         aria-hidden="true"
+        fetchPriority="high"
         className="fixed inset-0 w-full h-full object-cover transition-opacity duration-700"
         style={{ zIndex: -1, opacity: videoReady ? 0 : 1 }}
       />
@@ -46,19 +47,23 @@ export function Hero() {
         }}
       />
 
-      {/* Decorative stars */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 h-1.5 rounded-full bg-white opacity-60"
-            style={{
-              top: `${(i * 17 + 5) % 80}%`,
-              left: `${(i * 23 + 7) % 100}%`,
-            }}
-          />
-        ))}
-      </div>
+      {/* Decorative stars — single div with radial-gradient dots */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(1.5px 1.5px at 7% 5%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 30% 22%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 53% 39%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 76% 56%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 99% 73%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 22% 10%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 45% 27%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 68% 44%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 91% 61%, rgba(255,255,255,0.6) 50%, transparent 50%), " +
+            "radial-gradient(1.5px 1.5px at 14% 78%, rgba(255,255,255,0.6) 50%, transparent 50%)",
+        }}
+      />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex items-center min-h-[calc(100vh-4rem)]">
         <div className="w-full flex flex-col items-center text-center text-white">

@@ -107,3 +107,37 @@ body {
   color: var(--foreground);
   text-align: right;
 }
+
+/* ==========================================
+   LANDING PAGE KEYFRAMES
+   ========================================== */
+
+@keyframes floatRandom1 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  25%  { transform: translate(40px, -30px) scale(1.05); }
+  50%  { transform: translate(-20px, 50px) scale(0.95); }
+  75%  { transform: translate(60px, 20px) scale(1.03); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes floatRandom2 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  25%  { transform: translate(-50px, 30px) scale(1.04); }
+  50%  { transform: translate(30px, -40px) scale(0.97); }
+  75%  { transform: translate(-30px, -20px) scale(1.02); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes landing-twinkle {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.2; }
+}
+
+.landing-twinkle {
+  animation: landing-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50%      { transform: scale(1.05); opacity: 0.3; }
+}

@@ -75,6 +75,7 @@ export function ParentReviews() {
               <img
                 src={parentImage}
                 alt="آراء الآباء"
+                loading="lazy"
                 className="w-full h-80 object-cover"
               />
               <div

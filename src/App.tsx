@@ -7,29 +7,8 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { type ReactNode, useMemo, useState } from "react";
-import LoginScreen from "@/components/auth/LoginScreen";
-import SignupTypeSelection from "@/components/auth/SignupTypeSelection";
-import OrganizationSignup from "@/components/auth/OrganizationSignup";
-import FamilySignup from "@/components/auth/FamilySignup";
-import AuthenticatedProfilePage from "@/components/auth/AuthenticatedProfilePage";
-import { LandingPage } from "@/components/landing/LandingPage";
-import OrganizationDashboard from "@/components/organization/OrganizationDashboard";
-import DashboardOverview from "@/components/organization/DashboardOverview";
-import ManageUsers from "@/components/organization/ManageUsers";
-import ManageGames from "@/components/organization/ManageGames";
-import ManageStudyYears from "@/components/organization/ManageStudyYears";
-import OrganizationSettings from "@/components/organization/OrganizationSettings";
-import SubscriptionsBilling from "@/components/organization/SubscriptionsBilling";
-import GameQuestionsManager from "@/components/shared/GameQuestionsManager";
-import FamilyDashboardComponent from "@/components/family/FamilyDashboard";
-import FamilyOverview from "@/components/family/FamilyOverview";
-import ChildrenProfiles from "@/components/family/ChildrenProfiles";
-import FamilyGamesLibrary from "@/components/family/FamilyGamesLibrary";
-import ProgressReports from "@/components/family/ProgressReports";
-import FamilySubscription from "@/components/family/FamilySubscription";
-import FamilySettings from "@/components/family/FamilySettings";
-import StudentDashboard from "@/components/student/StudentDashboard";
+import { type ReactNode, lazy, Suspense, useMemo, useState } from "react";
+import FullPageLoader from "@/components/ui/FullPageLoader";
 import {
   ProtectedRoute,
   PublicOnlyRoute,
@@ -40,6 +19,78 @@ import {
 } from "@/features/auth";
 import { tokenStorage } from "@/api/client";
 import type { UserRole } from "@/features/auth";
+
+// ── Lazy-loaded route chunks ──────────────────────────────────
+const LandingPage = lazy(() =>
+  import("@/components/landing/LandingPage").then((m) => ({
+    default: m.LandingPage,
+  })),
+);
+const LoginScreen = lazy(() => import("@/components/auth/LoginScreen"));
+const SignupTypeSelection = lazy(
+  () => import("@/components/auth/SignupTypeSelection"),
+);
+const OrganizationSignup = lazy(
+  () => import("@/components/auth/OrganizationSignup"),
+);
+const FamilySignup = lazy(() => import("@/components/auth/FamilySignup"));
+const AuthenticatedProfilePage = lazy(
+  () => import("@/components/auth/AuthenticatedProfilePage"),
+);
+
+// Organization dashboard chunk
+const OrganizationDashboard = lazy(
+  () => import("@/components/organization/OrganizationDashboard"),
+);
+const DashboardOverview = lazy(
+  () => import("@/components/organization/DashboardOverview"),
+);
+const ManageUsers = lazy(
+  () => import("@/components/organization/ManageUsers"),
+);
+const ManageGames = lazy(
+  () => import("@/components/organization/ManageGames"),
+);
+const ManageStudyYears = lazy(
+  () => import("@/components/organization/ManageStudyYears"),
+);
+const OrganizationSettings = lazy(
+  () => import("@/components/organization/OrganizationSettings"),
+);
+const SubscriptionsBilling = lazy(
+  () => import("@/components/organization/SubscriptionsBilling"),
+);
+const GameQuestionsManager = lazy(
+  () => import("@/components/shared/GameQuestionsManager"),
+);
+
+// Family dashboard chunk
+const FamilyDashboardComponent = lazy(
+  () => import("@/components/family/FamilyDashboard"),
+);
+const FamilyOverview = lazy(
+  () => import("@/components/family/FamilyOverview"),
+);
+const ChildrenProfiles = lazy(
+  () => import("@/components/family/ChildrenProfiles"),
+);
+const FamilyGamesLibrary = lazy(
+  () => import("@/components/family/FamilyGamesLibrary"),
+);
+const ProgressReports = lazy(
+  () => import("@/components/family/ProgressReports"),
+);
+const FamilySubscription = lazy(
+  () => import("@/components/family/FamilySubscription"),
+);
+const FamilySettings = lazy(
+  () => import("@/components/family/FamilySettings"),
+);
+
+// Student dashboard chunk
+const StudentDashboard = lazy(
+  () => import("@/components/student/StudentDashboard"),
+);
 
 function routeForRole(role: UserRole) {
   if (role === "school_admin") {
@@ -424,8 +475,9 @@ function StudentDashboardPage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Landing />} />
+      <Suspense fallback={<FullPageLoader />}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
 
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<Login />} />
@@ -491,7 +543,8 @@ export default function App() {
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
