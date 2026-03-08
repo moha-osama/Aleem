@@ -28,11 +28,15 @@ function Logo() {
 interface OrganizationSignupProps {
   onComplete: (data: Record<string, unknown>) => void;
   onBack: () => void;
+  isSubmitting?: boolean;
+  errorMessage?: string;
 }
 
 export default function OrganizationSignup({
   onComplete,
   onBack,
+  isSubmitting = false,
+  errorMessage,
 }: OrganizationSignupProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -56,11 +60,7 @@ export default function OrganizationSignup({
     if (step < 3) {
       setStep(step + 1);
     } else {
-      onComplete({
-        name: formData.schoolName,
-        email: formData.email,
-        type: "organization",
-      });
+      onComplete({ ...formData, accountType: "organization" });
     }
   };
 
@@ -125,6 +125,7 @@ export default function OrganizationSignup({
                       handleInputChange("schoolName", e.target.value)
                     }
                     required
+                    disabled={isSubmitting}
                     className="w-full text-right"
                   />
                 </div>
@@ -142,6 +143,7 @@ export default function OrganizationSignup({
                       handleInputChange("principalName", e.target.value)
                     }
                     required
+                    disabled={isSubmitting}
                     className="w-full text-right"
                   />
                 </div>
@@ -157,6 +159,7 @@ export default function OrganizationSignup({
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     required
+                    disabled={isSubmitting}
                     className="w-full text-right"
                   />
                 </div>
@@ -172,6 +175,7 @@ export default function OrganizationSignup({
                     value={formData.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
                     required
+                    disabled={isSubmitting}
                     className="w-full text-right"
                   />
                 </div>
@@ -187,6 +191,7 @@ export default function OrganizationSignup({
                   <Select
                     value={formData.city}
                     onValueChange={(value) => handleInputChange("city", value)}
+                    disabled={isSubmitting}
                   >
                     <SelectTrigger className="w-full text-right">
                       <SelectValue placeholder="اختر المدينة" />
@@ -210,6 +215,7 @@ export default function OrganizationSignup({
                     onValueChange={(value) =>
                       handleInputChange("educationStage", value)
                     }
+                    disabled={isSubmitting}
                   >
                     <SelectTrigger className="w-full text-right">
                       <SelectValue placeholder="اختر المرحلة" />
@@ -240,6 +246,7 @@ export default function OrganizationSignup({
                       handleInputChange("password", e.target.value)
                     }
                     required
+                    disabled={isSubmitting}
                     className="w-full text-right"
                   />
                 </div>
@@ -257,6 +264,7 @@ export default function OrganizationSignup({
                       handleInputChange("confirmPassword", e.target.value)
                     }
                     required
+                    disabled={isSubmitting}
                     className="w-full text-right"
                   />
                 </div>
@@ -274,15 +282,23 @@ export default function OrganizationSignup({
                     onCheckedChange={(checked) =>
                       handleInputChange("agreeToTerms", checked)
                     }
+                    disabled={isSubmitting}
                   />
                 </div>
               </>
+            )}
+
+            {errorMessage && (
+              <p className="text-sm text-red-600 text-right" role="alert">
+                {errorMessage}
+              </p>
             )}
 
             <div className="flex gap-3 pt-4">
               <Button
                 type="button"
                 onClick={() => (step > 1 ? setStep(step - 1) : onBack())}
+                disabled={isSubmitting}
                 variant="outline"
                 className="flex-1"
               >
@@ -290,9 +306,14 @@ export default function OrganizationSignup({
               </Button>
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="flex-1 bg-[#83458E] hover:bg-[#7C3AED] text-white"
               >
-                {step < 3 ? "التالي" : "إنشاء الحساب"}
+                {isSubmitting
+                  ? "جاري إنشاء الحساب..."
+                  : step < 3
+                    ? "التالي"
+                    : "إنشاء الحساب"}
               </Button>
             </div>
           </form>

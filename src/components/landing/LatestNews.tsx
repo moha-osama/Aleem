@@ -1,5 +1,5 @@
-import news1 from "/news1.png";
-import news2 from "/news2.png";
+import news1 from "/news4.jpeg";
+import news2 from "/news5.jpeg";
 import news3 from "/news3.png";
 import { motion } from "framer-motion";
 
@@ -78,7 +78,11 @@ export function LatestNews() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
-              whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.12)", transition: { duration: 0.25 } }}
+              whileHover={{
+                y: -6,
+                boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
+                transition: { duration: 0.25 },
+              }}
             >
               <div className="relative h-48 overflow-hidden">
                 <img

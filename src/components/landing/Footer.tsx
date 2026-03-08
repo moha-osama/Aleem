@@ -30,7 +30,7 @@ export function Footer() {
             <div className="flex justify-start mb-4">
               <div className="bg-white rounded-full p-2 shadow-md w-40 h-20 flex items-center justify-center">
                 <img
-                  src="/logo.png"
+                  src="/logo.jpg"
                   alt="Logo"
                   className="w-full h-full object-contain"
                 />
@@ -41,7 +41,7 @@ export function Footer() {
               style={{ fontWeight: 400 }}
             >
               منصة تعليمية متكاملة تهدف إلى توفير تجربة تعلم ممتعة وفعّالة لجميع
-              الأطفال في المراحل الدراسية المختلفة.
+              الطلاب في المراحل الدراسية المختلفة.
             </p>
           </div>
 

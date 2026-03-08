@@ -9,7 +9,7 @@ export function IntroSection() {
     <section
       id="intro"
       className="relative overflow-hidden py-20 px-4"
-      style={{ background: "#F7F5FF" }}
+      style={{ background: "#F4D8FF" }}
     >
       {/* Keyframe animations */}
       <style>{`
@@ -72,7 +72,7 @@ export function IntroSection() {
                   backgroundClip: "text",
                 }}
               >
-                IBAL
+                Aleem
               </span>
             </h2>
 

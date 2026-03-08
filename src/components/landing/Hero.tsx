@@ -1,18 +1,28 @@
 import heroSvg from "/hero-svg.png";
-import heroBg from "/hero-img.jpeg";
+import heroBg from "/hero-img.png";
+import heroVideo from "/hero-bg-video.mp4";
 import { motion } from "framer-motion";
 
 export function Hero() {
   return (
     <section id="hero" className="relative min-h-screen pt-16">
+      {/* Background video — fixed so it stays behind the entire page while scrolling */}
+      <video
+        src={heroVideo}
+        autoPlay
+        loop
+        muted
+        className="fixed inset-0 w-full h-full object-fill"
+        style={{ zIndex: -1 }}
+      />
       {/* Background image — fixed so it stays behind the entire page while scrolling */}
-      <img
+      {/* <img
         src={heroBg}
         alt=""
         aria-hidden="true"
-        className="fixed inset-0 w-full h-full object-cover"
+        className="fixed inset-0 w-full h-full"
         style={{ zIndex: -1 }}
-      />
+      /> */}
 
       {/* Gradient overlay on top of image */}
       <div
@@ -47,7 +57,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            مرحباً بك في <span className="text-yellow-300">IBAL</span>
+            مرحباً بك في <span className="text-yellow-300">Aleem</span>
           </motion.h1>
 
           {/* Sub-heading */}
@@ -58,7 +68,9 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
           >
-            ألعاب IBAL التفاعلية الرقمية للمنهاج الفلسطيني
+            منصة تعليمية مبتكرة تحول المناهج المدرسية إلى ألعاب تفاعلية ممتعة，
+            تعزز الفهم، تنمّي المهارات، وتجعل التعلم <br />
+            رحلة مليئة بالمرح والإنجاز
           </motion.p>
 
           {/* Description */}

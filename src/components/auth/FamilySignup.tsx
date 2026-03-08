@@ -28,11 +28,15 @@ function Logo() {
 interface FamilySignupProps {
   onComplete: (data: Record<string, unknown>) => void;
   onBack: () => void;
+  isSubmitting?: boolean;
+  errorMessage?: string;
 }
 
 export default function FamilySignup({
   onComplete,
   onBack,
+  isSubmitting = false,
+  errorMessage,
 }: FamilySignupProps) {
   const [formData, setFormData] = useState({
     familyName: "",
@@ -52,12 +56,7 @@ export default function FamilySignup({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onComplete({
-      name: formData.familyName,
-      parentName: formData.parentName,
-      email: formData.email,
-      type: "family",
-    });
+    onComplete({ ...formData, accountType: "family" });
   };
 
   return (
@@ -105,6 +104,7 @@ export default function FamilySignup({
                   handleInputChange("familyName", e.target.value)
                 }
                 required
+                disabled={isSubmitting}
                 className="w-full text-right"
               />
             </div>
@@ -122,6 +122,7 @@ export default function FamilySignup({
                   handleInputChange("parentName", e.target.value)
                 }
                 required
+                disabled={isSubmitting}
                 className="w-full text-right"
               />
             </div>
@@ -137,6 +138,7 @@ export default function FamilySignup({
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 required
+                disabled={isSubmitting}
                 className="w-full text-right"
               />
             </div>
@@ -152,6 +154,7 @@ export default function FamilySignup({
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
                 required
+                disabled={isSubmitting}
                 className="w-full text-right"
               />
             </div>
@@ -169,6 +172,7 @@ export default function FamilySignup({
                   handleInputChange("confirmPassword", e.target.value)
                 }
                 required
+                disabled={isSubmitting}
                 className="w-full text-right"
               />
             </div>
@@ -186,6 +190,7 @@ export default function FamilySignup({
                   handleInputChange("phoneNumber", e.target.value)
                 }
                 required
+                disabled={isSubmitting}
                 className="w-full text-right"
               />
             </div>
@@ -197,6 +202,7 @@ export default function FamilySignup({
               <Select
                 value={formData.country}
                 onValueChange={(value) => handleInputChange("country", value)}
+                disabled={isSubmitting}
               >
                 <SelectTrigger className="w-full text-right">
                   <SelectValue placeholder="اختر الدولة" />
@@ -216,16 +222,17 @@ export default function FamilySignup({
 
             <div className="space-y-2">
               <Label htmlFor="numberOfChildren" className="text-right block">
-                عدد الأطفال
+                عدد الطلاب
               </Label>
               <Select
                 value={formData.numberOfChildren}
                 onValueChange={(value) =>
                   handleInputChange("numberOfChildren", value)
                 }
+                disabled={isSubmitting}
               >
                 <SelectTrigger className="w-full text-right">
-                  <SelectValue placeholder="اختر عدد الأطفال" />
+                  <SelectValue placeholder="اختر عدد الطلاب" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="1">طفل واحد</SelectItem>
@@ -250,13 +257,21 @@ export default function FamilySignup({
                 onCheckedChange={(checked) =>
                   handleInputChange("agreeToTerms", checked)
                 }
+                disabled={isSubmitting}
               />
             </div>
+
+            {errorMessage && (
+              <p className="text-sm text-red-600 text-right" role="alert">
+                {errorMessage}
+              </p>
+            )}
 
             <div className="flex gap-3 pt-4">
               <Button
                 type="button"
                 onClick={onBack}
+                disabled={isSubmitting}
                 variant="outline"
                 className="flex-1"
               >
@@ -264,9 +279,10 @@ export default function FamilySignup({
               </Button>
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="flex-1 bg-[#F59E0B] hover:bg-[#D97706] text-white"
               >
-                إنشاء الحساب
+                {isSubmitting ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
               </Button>
             </div>
           </form>

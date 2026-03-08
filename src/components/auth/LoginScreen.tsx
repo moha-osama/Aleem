@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { FloatingLabelInput } from "@/components/ui/floating-label-input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import logoSrc from "/full_logo.png";
@@ -19,23 +19,27 @@ function Logo() {
 }
 
 interface LoginScreenProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (username: string, password: string) => void;
   onNavigateToSignup: () => void;
   onBack?: () => void;
+  isSubmitting?: boolean;
+  errorMessage?: string;
 }
 
 export default function LoginScreen({
   onLogin,
   onNavigateToSignup,
   onBack,
+  isSubmitting = false,
+  errorMessage,
 }: LoginScreenProps) {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(email, password);
+    onLogin(identifier, password);
   };
 
   return (
@@ -63,35 +67,34 @@ export default function LoginScreen({
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-right block">
-                البريد الإلكتروني
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="البريد الإلكتروني"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full text-right"
-              />
-            </div>
+            <FloatingLabelInput
+              id="identifier"
+              label="البريد الإلكتروني أو اسم المستخدم"
+              type="text"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              autoComplete="username"
+              required
+              disabled={isSubmitting}
+              className="text-right"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-right block">
-                كلمة المرور
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="كلمة المرور"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full text-right"
-              />
-            </div>
+            <FloatingLabelInput
+              id="password"
+              label="كلمة المرور"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isSubmitting}
+              className="text-right"
+            />
+
+            {errorMessage && (
+              <p className="text-sm text-red-600 text-right" role="alert">
+                {errorMessage}
+              </p>
+            )}
 
             <div className="flex items-center justify-between">
               <a href="#" className="text-sm text-[#83458E] hover:underline">
@@ -107,15 +110,17 @@ export default function LoginScreen({
                   onCheckedChange={(checked) =>
                     setRememberMe(checked as boolean)
                   }
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
 
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full bg-[#83458E] hover:bg-[#7C3AED] text-white py-6"
             >
-              دخول
+              {isSubmitting ? "جاري تسجيل الدخول..." : "دخول"}
             </Button>
 
             <div className="relative my-6">
@@ -132,6 +137,7 @@ export default function LoginScreen({
               <button
                 type="button"
                 onClick={onNavigateToSignup}
+                disabled={isSubmitting}
                 className="text-sm text-[#83458E] hover:underline font-semibold"
               >
                 إنشاء حساب جديد

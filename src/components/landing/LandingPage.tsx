@@ -26,9 +26,9 @@ export function LandingPage({ onLoginClick }: LandingPageProps) {
       <IntroSection />
       <Stats />
       <EducationalGames />
+      <AppDownload />
       <CompetitiveSection />
       <LearningJourney />
-      <AppDownload />
       <SubscriptionPlans />
       <ParentReviews />
       <LatestNews />
