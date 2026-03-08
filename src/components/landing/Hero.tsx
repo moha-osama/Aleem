@@ -1,5 +1,5 @@
 import heroSvg from "/hero-svg.png";
-import heroBg from "/hero-img.png";
+import heroBg from "/hero-img.jpeg";
 import heroVideo from "/hero-bg-video.mp4";
 import { motion } from "framer-motion";
 import { useState } from "react";
