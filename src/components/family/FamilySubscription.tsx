@@ -107,7 +107,7 @@ export default function FamilySubscription() {
           <div>
             <p className="text-sm text-gray-600 mb-1">عدد الطلاب</p>
             <p className="text-3xl font-bold text-[#EC4899]">
-              {currentPlan.count}
+              {currentPlan.children}
             </p>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function FamilySubscription() {
                 className={`w-16 h-16 bg-linear-to-br ${plan.color} rounded-lg flex items-center justify-center mb-4`}
               >
                 <span className="text-white text-2xl font-bold">
-                  {plan.count}
+                  {plan.children}
                 </span>
               </div>
 
