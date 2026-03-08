@@ -46,7 +46,7 @@ export default function StudentDashboard({
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <img src="/logo.jpg" alt="IBAL Logo" className="h-10 w-auto" />
+              <img src="/logo.jpg" alt="Aleem Logo" className="h-10 w-auto" />
             </div>
 
             {/* Nav Links */}

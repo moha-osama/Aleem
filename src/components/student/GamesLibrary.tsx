@@ -74,7 +74,7 @@ export default function GamesLibrary({ onGameSelect }: GamesLibraryProps) {
             >
               <div className="h-32 bg-gradient-to-br from-[#8B5CF6] to-[#EC4899] flex items-center justify-center">
                 <span className="text-white text-5xl font-bold opacity-20">
-                  IBAL
+                  Aleem
                 </span>
               </div>
               <div className="p-5 space-y-3">
