@@ -8,6 +8,7 @@ import {
   paginatedSchoolUsersSchema,
   refreshTokenResponseSchema,
   registerAccountResponseSchema,
+  registerSchoolResponseSchema,
   schoolUsersArraySchema,
 } from "./auth.schemas";
 import type {
@@ -21,6 +22,9 @@ import type {
   RefreshTokenRequest,
   RefreshTokenResponse,
   RegisterAccountResponse,
+  RegisterParentRequest,
+  RegisterSchoolRequest,
+  RegisterSchoolResponse,
   RegisterStudentRequest,
   RegisterTeacherRequest,
   SchoolUserRoleFilter,
@@ -117,6 +121,28 @@ export async function registerTeacher(
       signal: options?.signal,
     },
   );
+
+  return parseWithSchema(registerAccountResponseSchema, response.data);
+}
+
+export async function registerSchool(
+  payload: RegisterSchoolRequest,
+  options?: RequestOptions,
+): Promise<RegisterSchoolResponse> {
+  const response = await apiClient.post("/api/auth/register/school/", payload, {
+    signal: options?.signal,
+  });
+
+  return parseWithSchema(registerSchoolResponseSchema, response.data);
+}
+
+export async function registerParent(
+  payload: RegisterParentRequest,
+  options?: RequestOptions,
+): Promise<RegisterAccountResponse> {
+  const response = await apiClient.post("/api/parents/register/", payload, {
+    signal: options?.signal,
+  });
 
   return parseWithSchema(registerAccountResponseSchema, response.data);
 }

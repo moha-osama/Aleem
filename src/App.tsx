@@ -14,6 +14,7 @@ import {
   PublicOnlyRoute,
   useAuth,
   useLogin,
+  useRegisterSchool,
   useSignup,
   toApiErrorMessage,
 } from "@/features/auth";
@@ -45,12 +46,8 @@ const OrganizationDashboard = lazy(
 const DashboardOverview = lazy(
   () => import("@/components/organization/DashboardOverview"),
 );
-const ManageUsers = lazy(
-  () => import("@/components/organization/ManageUsers"),
-);
-const ManageGames = lazy(
-  () => import("@/components/organization/ManageGames"),
-);
+const ManageUsers = lazy(() => import("@/components/organization/ManageUsers"));
+const ManageGames = lazy(() => import("@/components/organization/ManageGames"));
 const ManageStudyYears = lazy(
   () => import("@/components/organization/ManageStudyYears"),
 );
@@ -68,9 +65,7 @@ const GameQuestionsManager = lazy(
 const FamilyDashboardComponent = lazy(
   () => import("@/components/family/FamilyDashboard"),
 );
-const FamilyOverview = lazy(
-  () => import("@/components/family/FamilyOverview"),
-);
+const FamilyOverview = lazy(() => import("@/components/family/FamilyOverview"));
 const ChildrenProfiles = lazy(
   () => import("@/components/family/ChildrenProfiles"),
 );
@@ -83,9 +78,7 @@ const ProgressReports = lazy(
 const FamilySubscription = lazy(
   () => import("@/components/family/FamilySubscription"),
 );
-const FamilySettings = lazy(
-  () => import("@/components/family/FamilySettings"),
-);
+const FamilySettings = lazy(() => import("@/components/family/FamilySettings"));
 
 // Student dashboard chunk
 const StudentDashboard = lazy(
@@ -198,18 +191,11 @@ function SignupType() {
 
 function OrgSignup() {
   const navigate = useNavigate();
-  const signupMutation = useSignup();
+  const registerSchoolMutation = useRegisterSchool();
   const [clientError, setClientError] = useState<string | null>(null);
 
   const handleComplete = async (data: Record<string, unknown>) => {
     setClientError(null);
-
-    if (!tokenStorage.getAccessToken()) {
-      setClientError(
-        "لا يمكن إنشاء هذا النوع من الحسابات بدون تسجيل دخول. حسب إعدادات الـ API الحالية، إنشاء حساب المؤسسة يتطلب صلاحية school_admin.",
-      );
-      return;
-    }
 
     const password = String(data.password ?? "");
     const confirmPassword = String(data.confirmPassword ?? "");
@@ -225,27 +211,21 @@ function OrgSignup() {
       return;
     }
 
-    const email = String(data.email ?? "");
-    const principalName = String(data.principalName ?? "");
-    const { firstName, lastName } = splitName(principalName);
-
     try {
-      await signupMutation.mutateAsync({
-        accountType: "organization",
-        payload: {
-          username: createUsernameFromEmail(email, "teacher"),
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          password,
-          subject_ids: [],
-        },
+      await registerSchoolMutation.mutateAsync({
+        school_name: String(data.school_name ?? ""),
+        school_address: String(data.school_address ?? ""),
+        username: String(data.username ?? ""),
+        email: String(data.email ?? ""),
+        first_name: String(data.first_name ?? ""),
+        last_name: String(data.last_name ?? ""),
+        password,
       });
 
       navigate("/login", {
         replace: true,
         state: {
-          infoMessage: "تم إنشاء الحساب بنجاح. يمكنك تسجيل الدخول الآن.",
+          infoMessage: "تم إنشاء حساب المدرسة بنجاح. يمكنك تسجيل الدخول الآن.",
         },
       });
     } catch {
@@ -257,11 +237,11 @@ function OrgSignup() {
     <OrganizationSignup
       onComplete={handleComplete}
       onBack={() => navigate("/signup")}
-      isSubmitting={signupMutation.isPending}
+      isSubmitting={registerSchoolMutation.isPending}
       errorMessage={
         clientError ??
-        (signupMutation.error
-          ? toApiErrorMessage(signupMutation.error)
+        (registerSchoolMutation.error
+          ? toApiErrorMessage(registerSchoolMutation.error)
           : undefined)
       }
     />
@@ -479,70 +459,70 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
 
-        <Route element={<PublicOnlyRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignupType />} />
-          <Route path="/signup/organization" element={<OrgSignup />} />
-          <Route path="/signup/family" element={<FamilySignupPage />} />
-        </Route>
-
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardHome />} />
-          <Route
-            path="/dashboard/organization"
-            element={
-              <RequireRole roles={["school_admin"]}>
-                <OrgDashboard />
-              </RequireRole>
-            }
-          >
-            <Route index element={<Navigate to="overview" replace />} />
-            <Route path="overview" element={<DashboardOverview />} />
-            <Route path="manage-users">
-              <Route index element={<Navigate to="students" replace />} />
-              <Route path=":tab" element={<ManageUsers />} />
-            </Route>
-            <Route path="games" element={<ManageGames />} />
-            <Route path="game-questions">
-              <Route index element={<Navigate to="questions" replace />} />
-              <Route path=":tab" element={<GameQuestionsManager />} />
-            </Route>
-            <Route path="study-years">
-              <Route index element={<Navigate to="levels" replace />} />
-              <Route path=":tab" element={<ManageStudyYears />} />
-            </Route>
-            <Route path="billing" element={<SubscriptionsBilling />} />
-            <Route path="settings" element={<OrganizationSettings />} />
+          <Route element={<PublicOnlyRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignupType />} />
+            <Route path="/signup/organization" element={<OrgSignup />} />
+            <Route path="/signup/family" element={<FamilySignupPage />} />
           </Route>
-          <Route
-            path="/dashboard/home"
-            element={
-              <RequireRole roles={["parent", "teacher"]}>
-                <FamilyDashboard />
-              </RequireRole>
-            }
-          >
-            <Route index element={<Navigate to="overview" replace />} />
-            <Route path="overview" element={<FamilyOverview />} />
-            <Route path="children" element={<ChildrenProfiles />} />
-            <Route path="games" element={<FamilyGamesLibrary />} />
-            <Route path="progress" element={<ProgressReports />} />
-            <Route path="reports" element={<ProgressReports />} />
-            <Route path="subscription" element={<FamilySubscription />} />
-            <Route path="settings" element={<FamilySettings />} />
-          </Route>
-          <Route
-            path="/dashboard/student"
-            element={
-              <RequireRole roles={["student"]}>
-                <StudentDashboardPage />
-              </RequireRole>
-            }
-          />
-          <Route path="/profile" element={<AuthenticatedProfilePage />} />
-        </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardHome />} />
+            <Route
+              path="/dashboard/organization"
+              element={
+                <RequireRole roles={["school_admin"]}>
+                  <OrgDashboard />
+                </RequireRole>
+              }
+            >
+              <Route index element={<Navigate to="overview" replace />} />
+              <Route path="overview" element={<DashboardOverview />} />
+              <Route path="manage-users">
+                <Route index element={<Navigate to="students" replace />} />
+                <Route path=":tab" element={<ManageUsers />} />
+              </Route>
+              <Route path="games" element={<ManageGames />} />
+              <Route path="game-questions">
+                <Route index element={<Navigate to="questions" replace />} />
+                <Route path=":tab" element={<GameQuestionsManager />} />
+              </Route>
+              <Route path="study-years">
+                <Route index element={<Navigate to="levels" replace />} />
+                <Route path=":tab" element={<ManageStudyYears />} />
+              </Route>
+              <Route path="billing" element={<SubscriptionsBilling />} />
+              <Route path="settings" element={<OrganizationSettings />} />
+            </Route>
+            <Route
+              path="/dashboard/home"
+              element={
+                <RequireRole roles={["parent", "teacher"]}>
+                  <FamilyDashboard />
+                </RequireRole>
+              }
+            >
+              <Route index element={<Navigate to="overview" replace />} />
+              <Route path="overview" element={<FamilyOverview />} />
+              <Route path="children" element={<ChildrenProfiles />} />
+              <Route path="games" element={<FamilyGamesLibrary />} />
+              <Route path="progress" element={<ProgressReports />} />
+              <Route path="reports" element={<ProgressReports />} />
+              <Route path="subscription" element={<FamilySubscription />} />
+              <Route path="settings" element={<FamilySettings />} />
+            </Route>
+            <Route
+              path="/dashboard/student"
+              element={
+                <RequireRole roles={["student"]}>
+                  <StudentDashboardPage />
+                </RequireRole>
+              }
+            />
+            <Route path="/profile" element={<AuthenticatedProfilePage />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

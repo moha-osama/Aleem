@@ -33,7 +33,7 @@ export function Navbar({ onLoginClick }: NavbarProps) {
 
   return (
     <>
-      <nav className="fixed w-full flex justify-center mt-8 z-50">
+      <nav className="fixed w-full flex justify-center mt-4 md:mt-8 z-50">
         <div className="w-[80%] bg-[#6F267A] rounded-full shadow-lg px-2">
           <div className="flex items-center justify-between h-16">
             {/* Logo (right side in RTL) with white background */}

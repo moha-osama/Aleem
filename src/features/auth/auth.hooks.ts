@@ -15,6 +15,8 @@ import {
   login,
   logout,
   refreshToken,
+  registerParent,
+  registerSchool,
   registerStudent,
   registerTeacher,
   updateMe,
@@ -30,6 +32,9 @@ import type {
   RefreshTokenRequest,
   RefreshTokenResponse,
   RegisterAccountResponse,
+  RegisterParentRequest,
+  RegisterSchoolRequest,
+  RegisterSchoolResponse,
   RegisterStudentRequest,
   RegisterTeacherRequest,
   SchoolUserRoleFilter,
@@ -142,6 +147,33 @@ export function useChangePassword(): UseMutationResult<
 > {
   return useMutation({
     mutationFn: ({ signal, ...payload }) => changePassword(payload, { signal }),
+  });
+}
+
+export function useRegisterSchool(): UseMutationResult<
+  RegisterSchoolResponse,
+  Error,
+  MutationWithSignal<RegisterSchoolRequest>
+> {
+  return useMutation({
+    mutationFn: ({ signal, ...payload }) => registerSchool(payload, { signal }),
+  });
+}
+
+export function useRegisterParent(): UseMutationResult<
+  RegisterAccountResponse,
+  Error,
+  MutationWithSignal<RegisterParentRequest>
+> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ signal, ...payload }) => registerParent(payload, { signal }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: authQueryKeys.schoolUsers(),
+      });
+    },
   });
 }
 

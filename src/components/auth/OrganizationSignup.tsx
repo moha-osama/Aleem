@@ -3,13 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import logoSrc from "/full_logo.png";
 
 /* ── Inline Logo ─────────────────────────────────────── */
@@ -40,12 +33,12 @@ export default function OrganizationSignup({
 }: OrganizationSignupProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    schoolName: "",
-    principalName: "",
+    school_name: "",
+    school_address: "",
     email: "",
-    phone: "",
-    city: "",
-    educationStage: "",
+    first_name: "",
+    last_name: "",
+    username: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -113,16 +106,16 @@ export default function OrganizationSignup({
             {step === 1 && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="schoolName" className="text-right block">
+                  <Label htmlFor="school_name" className="text-right block">
                     اسم المدرسة / المؤسسة
                   </Label>
                   <Input
-                    id="schoolName"
+                    id="school_name"
                     type="text"
                     placeholder="اسم المدرسة"
-                    value={formData.schoolName}
+                    value={formData.school_name}
                     onChange={(e) =>
-                      handleInputChange("schoolName", e.target.value)
+                      handleInputChange("school_name", e.target.value)
                     }
                     required
                     disabled={isSubmitting}
@@ -131,16 +124,16 @@ export default function OrganizationSignup({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="principalName" className="text-right block">
-                    اسم المدير / المسؤول
+                  <Label htmlFor="school_address" className="text-right block">
+                    عنوان المدرسة
                   </Label>
                   <Input
-                    id="principalName"
+                    id="school_address"
                     type="text"
-                    placeholder="الاسم الكامل"
-                    value={formData.principalName}
+                    placeholder="المدينة، الدولة"
+                    value={formData.school_address}
                     onChange={(e) =>
-                      handleInputChange("principalName", e.target.value)
+                      handleInputChange("school_address", e.target.value)
                     }
                     required
                     disabled={isSubmitting}
@@ -150,30 +143,14 @@ export default function OrganizationSignup({
 
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-right block">
-                    البريد الإلكتروني
+                    البريد الإلكتروني للمسؤول
                   </Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="example@school.com"
+                    placeholder="admin@school.com"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
-                    required
-                    disabled={isSubmitting}
-                    className="w-full text-right"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-right block">
-                    رقم الهاتف
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+966 XX XXX XXXX"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
                     required
                     disabled={isSubmitting}
                     className="w-full text-right"
@@ -185,48 +162,58 @@ export default function OrganizationSignup({
             {step === 2 && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="city" className="text-right block">
-                    المدينة / المنطقة
+                  <Label htmlFor="first_name" className="text-right block">
+                    الاسم الأول
                   </Label>
-                  <Select
-                    value={formData.city}
-                    onValueChange={(value) => handleInputChange("city", value)}
+                  <Input
+                    id="first_name"
+                    type="text"
+                    placeholder="الاسم الأول"
+                    value={formData.first_name}
+                    onChange={(e) =>
+                      handleInputChange("first_name", e.target.value)
+                    }
+                    required
                     disabled={isSubmitting}
-                  >
-                    <SelectTrigger className="w-full text-right">
-                      <SelectValue placeholder="اختر المدينة" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="riyadh">الرياض</SelectItem>
-                      <SelectItem value="jeddah">جدة</SelectItem>
-                      <SelectItem value="dammam">الدمام</SelectItem>
-                      <SelectItem value="mecca">مكة المكرمة</SelectItem>
-                      <SelectItem value="medina">المدينة المنورة</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    className="w-full text-right"
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="educationStage" className="text-right block">
-                    المرحلة التعليمية
+                  <Label htmlFor="last_name" className="text-right block">
+                    اسم العائلة
                   </Label>
-                  <Select
-                    value={formData.educationStage}
-                    onValueChange={(value) =>
-                      handleInputChange("educationStage", value)
+                  <Input
+                    id="last_name"
+                    type="text"
+                    placeholder="اسم العائلة"
+                    value={formData.last_name}
+                    onChange={(e) =>
+                      handleInputChange("last_name", e.target.value)
                     }
+                    required
                     disabled={isSubmitting}
-                  >
-                    <SelectTrigger className="w-full text-right">
-                      <SelectValue placeholder="اختر المرحلة" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="elementary">ابتدائي</SelectItem>
-                      <SelectItem value="middle">متوسط</SelectItem>
-                      <SelectItem value="high">ثانوي</SelectItem>
-                      <SelectItem value="all">جميع المراحل</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    className="w-full text-right"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="username" className="text-right block">
+                    اسم المستخدم
+                  </Label>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="admin_username"
+                    value={formData.username}
+                    onChange={(e) =>
+                      handleInputChange("username", e.target.value)
+                    }
+                    required
+                    disabled={isSubmitting}
+                    className="w-full text-right"
+                    dir="ltr"
+                  />
                 </div>
               </>
             )}
@@ -269,7 +256,7 @@ export default function OrganizationSignup({
                   />
                 </div>
 
-                <div className="flex items-center gap-2 justify-end">
+                <div className="flex items-center gap-2 justify-start">
                   <Label htmlFor="terms" className="text-sm cursor-pointer">
                     أوافق على{" "}
                     <a href="#" className="text-[#83458E] hover:underline">

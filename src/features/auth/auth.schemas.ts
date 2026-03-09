@@ -33,6 +33,22 @@ export const registerAccountResponseSchema = z.object({
   username: z.string(),
 });
 
+export const registerSchoolResponseSchema = z.object({
+  detail: z.string(),
+  school: z.object({
+    id: z.number(),
+    name: z.string(),
+    code: z.string(),
+    is_active: z.boolean(),
+  }),
+  admin_user: z.object({
+    id: z.number(),
+    username: z.string(),
+    email: z.string(),
+    role: z.string(),
+  }),
+});
+
 export const schoolUserSummarySchema = z.object({
   id: z.number(),
   username: z.string(),

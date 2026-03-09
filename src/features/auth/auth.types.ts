@@ -74,6 +74,40 @@ export interface RegisterAccountResponse {
   username: string;
 }
 
+export interface RegisterSchoolRequest {
+  school_name: string;
+  school_address: string;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+}
+
+export interface RegisterSchoolResponse {
+  detail: string;
+  school: {
+    id: number;
+    name: string;
+    code: string;
+    is_active: boolean;
+  };
+  admin_user: {
+    id: number;
+    username: string;
+    email: string;
+    role: string;
+  };
+}
+
+export interface RegisterParentRequest {
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+}
+
 export interface SchoolUserSummary {
   id: number;
   username: string;

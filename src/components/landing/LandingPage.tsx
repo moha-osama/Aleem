@@ -18,8 +18,11 @@ interface LandingPageProps {
 export function LandingPage({ onLoginClick }: LandingPageProps) {
   return (
     <div
-      className="min-h-screen"
-      style={{ fontFamily: "'Cairo', 'Tajawal', sans-serif", direction: "rtl" }}
+      style={{
+        fontFamily: "'Cairo', 'Tajawal', sans-serif",
+        direction: "rtl",
+        overflowX: "hidden",
+      }}
     >
       <Navbar onLoginClick={onLoginClick} />
       <Hero />
