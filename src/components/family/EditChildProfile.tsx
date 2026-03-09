@@ -17,52 +17,45 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useEducationLevels, useEducationStages } from "@/features/education";
-import type { RegisterStudentRequest } from "@/features/auth";
-import { useSchools } from "@/features/parents";
+import { useUpdateChildProfile } from "@/features/parents";
+import type { ParentChild } from "@/features/parents";
 
-interface AddChildProfileProps {
+interface EditChildProfileProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (data: RegisterStudentRequest, schoolId?: number) => Promise<void>;
-  isSubmitting?: boolean;
+  child: ParentChild;
 }
 
-export default function AddChildProfile({
+export default function EditChildProfile({
   open,
   onClose,
-  onAdd,
-  isSubmitting = false,
-}: AddChildProfileProps) {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  child,
+}: EditChildProfileProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [educationLevelId, setEducationLevelId] = useState("");
   const [stageId, setStageId] = useState("");
-  const [educationYear, setEducationYear] = useState("");
+  const [educationYear, setEducationYear] = useState(child.education_year);
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [schoolId, setSchoolId] = useState("");
 
   const levelsQuery = useEducationLevels(open);
-  const schoolsQuery = useSchools(open);
   const selectedLevelId = educationLevelId ? Number(educationLevelId) : null;
   const stagesQuery = useEducationStages(
     selectedLevelId ? { education_level: selectedLevelId } : undefined,
     Boolean(selectedLevelId),
   );
 
+  const updateMutation = useUpdateChildProfile();
+
   const resetForm = () => {
-    setUsername("");
-    setEmail("");
     setFirstName("");
     setLastName("");
-    setPassword("");
+    setEmail("");
     setEducationLevelId("");
     setStageId("");
-    setEducationYear("");
+    setEducationYear(child.education_year);
     setDateOfBirth("");
-    setSchoolId("");
   };
 
   const handleClose = () => {
@@ -77,20 +70,17 @@ export default function AddChildProfile({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onAdd(
-      {
-        username: username.trim(),
-        email: email.trim(),
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        password,
-        stage_id: Number(stageId),
-        education_year: educationYear.trim(),
-        date_of_birth: dateOfBirth || undefined,
-      },
-      schoolId ? Number(schoolId) : undefined,
-    );
+    const payload: Record<string, string | number> = {};
+    if (firstName.trim()) payload.first_name = firstName.trim();
+    if (lastName.trim()) payload.last_name = lastName.trim();
+    if (email.trim()) payload.email = email.trim();
+    if (stageId) payload.stage_id = Number(stageId);
+    if (educationYear.trim()) payload.education_year = educationYear.trim();
+    if (dateOfBirth) payload.date_of_birth = dateOfBirth;
+
+    await updateMutation.mutateAsync({ childId: child.user_id, ...payload });
     resetForm();
+    onClose();
   };
 
   return (
@@ -106,74 +96,62 @@ export default function AddChildProfile({
       >
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-[#6D28D9] text-right">
-            إضافة ملف طفل جديد
+            تعديل ملف {child.full_name}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="child-username">اسم المستخدم *</Label>
+              <Label htmlFor="edit-first-name">الاسم الأول</Label>
               <Input
-                id="child-username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                disabled={isSubmitting}
+                id="edit-first-name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                disabled={updateMutation.isPending}
                 className="text-right"
+                placeholder="اتركه فارغاً للإبقاء على الحالي"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="child-email">البريد الإلكتروني *</Label>
+              <Label htmlFor="edit-last-name">الاسم الأخير</Label>
               <Input
-                id="child-email"
+                id="edit-last-name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                disabled={updateMutation.isPending}
+                className="text-right"
+                placeholder="اتركه فارغاً للإبقاء على الحالي"
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="edit-email">البريد الإلكتروني</Label>
+              <Input
+                id="edit-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={isSubmitting}
+                disabled={updateMutation.isPending}
                 className="text-right"
+                placeholder="اتركه فارغاً للإبقاء على الحالي"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="child-first-name">الاسم الأول *</Label>
-              <Input
-                id="child-first-name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-                disabled={isSubmitting}
-                className="text-right"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="child-last-name">الاسم الأخير *</Label>
-              <Input
-                id="child-last-name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-                disabled={isSubmitting}
-                className="text-right"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>المرحلة التعليمية *</Label>
+              <Label>المرحلة التعليمية</Label>
               <Select
                 value={educationLevelId}
                 onValueChange={onEducationLevelChange}
-                disabled={isSubmitting}
+                disabled={updateMutation.isPending}
               >
                 <SelectTrigger className="text-right">
                   <SelectValue
                     placeholder={
                       levelsQuery.isLoading
                         ? "جاري تحميل المراحل..."
-                        : "اختر المرحلة التعليمية"
+                        : `الحالية: ${child.education_level}`
                     }
                   />
                 </SelectTrigger>
@@ -188,19 +166,21 @@ export default function AddChildProfile({
             </div>
 
             <div className="space-y-2">
-              <Label>الصف الدراسي *</Label>
+              <Label>الصف الدراسي</Label>
               <Select
                 value={stageId}
                 onValueChange={setStageId}
                 disabled={
-                  isSubmitting || !educationLevelId || stagesQuery.isLoading
+                  updateMutation.isPending ||
+                  !educationLevelId ||
+                  stagesQuery.isLoading
                 }
               >
                 <SelectTrigger className="text-right">
                   <SelectValue
                     placeholder={
                       !educationLevelId
-                        ? "اختر المرحلة التعليمية أولاً"
+                        ? `الحالي: ${child.stage}`
                         : stagesQuery.isLoading
                           ? "جاري تحميل الصفوف..."
                           : "اختر الصف الدراسي"
@@ -218,67 +198,27 @@ export default function AddChildProfile({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="child-education-year">العام الدراسي *</Label>
+              <Label htmlFor="edit-education-year">العام الدراسي</Label>
               <Input
-                id="child-education-year"
+                id="edit-education-year"
                 value={educationYear}
                 onChange={(e) => setEducationYear(e.target.value)}
-                required
                 placeholder="2024-2025"
-                disabled={isSubmitting}
+                disabled={updateMutation.isPending}
                 className="text-right"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="child-password">كلمة المرور *</Label>
+              <Label htmlFor="edit-dob">تاريخ الميلاد</Label>
               <Input
-                id="child-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isSubmitting}
-                className="text-right"
-              />
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="child-dob">تاريخ الميلاد (اختياري)</Label>
-              <Input
-                id="child-dob"
+                id="edit-dob"
                 type="date"
                 value={dateOfBirth}
                 onChange={(e) => setDateOfBirth(e.target.value)}
-                disabled={isSubmitting}
+                disabled={updateMutation.isPending}
                 className="text-right flex-row-reverse"
               />
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
-              <Label>المدرسة (اختياري)</Label>
-              <Select
-                value={schoolId}
-                onValueChange={setSchoolId}
-                disabled={isSubmitting || schoolsQuery.isLoading}
-              >
-                <SelectTrigger className="text-right">
-                  <SelectValue
-                    placeholder={
-                      schoolsQuery.isLoading
-                        ? "جاري تحميل المدارس..."
-                        : "اختر المدرسة (اختياري)"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {(schoolsQuery.data ?? []).map((school) => (
-                    <SelectItem key={school.id} value={String(school.id)}>
-                      {school.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -287,17 +227,17 @@ export default function AddChildProfile({
               type="button"
               variant="outline"
               onClick={handleClose}
-              disabled={isSubmitting}
+              disabled={updateMutation.isPending}
               className="flex-1"
             >
               إلغاء
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || !stageId}
-              className="flex-1 bg-[#6D28D9] hover:bg-[#5B21A3] text-white"
+              disabled={updateMutation.isPending}
+              className="flex-1 bg-linear-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7C3AED] hover:to-[#DB2777] text-white"
             >
-              {isSubmitting ? "جاري الإضافة..." : "إضافة الطفل"}
+              {updateMutation.isPending ? "جاري الحفظ..." : "حفظ التغييرات"}
             </Button>
           </DialogFooter>
         </form>

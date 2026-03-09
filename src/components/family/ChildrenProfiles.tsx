@@ -5,7 +5,11 @@ import ChildProfileCard from "./ChildProfileCard";
 import AddChildProfile from "./AddChildProfile";
 import { useAuth, useRegisterStudent } from "@/features/auth";
 import type { RegisterStudentRequest } from "@/features/auth";
-import { useLinkParentChild, useParentChildren } from "@/features/parents";
+import {
+  useLinkParentChild,
+  useParentChildren,
+  useAssignSchoolToChild,
+} from "@/features/parents";
 import { getDashboardConfig } from "./dashboardConfig";
 
 export default function ChildrenProfiles() {
@@ -16,13 +20,27 @@ export default function ChildrenProfiles() {
   const childrenQuery = useParentChildren();
   const registerStudentMutation = useRegisterStudent();
   const linkChildMutation = useLinkParentChild();
+  const assignSchoolMutation = useAssignSchoolToChild();
 
   const isSubmitting =
-    registerStudentMutation.isPending || linkChildMutation.isPending;
+    registerStudentMutation.isPending ||
+    linkChildMutation.isPending ||
+    assignSchoolMutation.isPending;
 
-  const handleAddChild = async (data: RegisterStudentRequest) => {
+  const handleAddChild = async (
+    data: RegisterStudentRequest,
+    schoolId?: number,
+  ) => {
     await registerStudentMutation.mutateAsync(data);
-    await linkChildMutation.mutateAsync({ username: data.username });
+    const { student_id } = await linkChildMutation.mutateAsync({
+      username: data.username,
+    });
+    if (schoolId) {
+      await assignSchoolMutation.mutateAsync({
+        childId: student_id,
+        school_id: schoolId,
+      });
+    }
     setShowAddChild(false);
   };
 
@@ -36,14 +54,16 @@ export default function ChildrenProfiles() {
           </h1>
           <p className="text-gray-600">{config.membersPageSubtitle}</p>
         </div>
-        <Button
-          onClick={() => setShowAddChild(true)}
-          disabled={isSubmitting}
-          className="bg-linear-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7C3AED] hover:to-[#DB2777] text-white"
-        >
-          <Plus className="w-5 h-5 ml-2" />
-          {config.addMemberLabel}
-        </Button>
+        {role !== "teacher" && (
+          <Button
+            onClick={() => setShowAddChild(true)}
+            disabled={isSubmitting}
+            className="bg-linear-to-r from-[#8B5CF6] to-[#EC4899] hover:from-[#7C3AED] hover:to-[#DB2777] text-white"
+          >
+            <Plus className="w-5 h-5 ml-2" />
+            {config.addMemberLabel}
+          </Button>
+        )}
       </div>
       {/* 
       {childrenQuery.error && (

@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export const schoolSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  gouvernement: z.string().optional(),
+});
+
+export const schoolsSchema = z.array(schoolSchema);
+
+export const assignSchoolResponseSchema = z.object({
+  detail: z.string(),
+});
+
+export const updateChildProfileResponseSchema = z.object({
+  detail: z.string(),
+});
+
 export const parentChildSchema = z.object({
   user_id: z.number(),
   username: z.string(),
