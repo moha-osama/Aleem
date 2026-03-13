@@ -1,6 +1,6 @@
-﻿import game1 from "/game1.png";
-import game2 from "/game2.png";
-import game3 from "/game3.png";
+﻿import game1 from "/121.png";
+import game2 from "/131.png";
+import game3 from "/222.png";
 import { motion } from "framer-motion";
 
 const gameCards = [
@@ -86,7 +86,7 @@ export function EducationalGames() {
               whileHover={{ y: -8, transition: { duration: 0.25 } }}
             >
               {/* Game image */}
-              <div className="relative overflow-hidden h-64">
+              <div className="relative overflow-hidden h-72">
                 <img
                   src={card.image}
                   alt={card.title}
