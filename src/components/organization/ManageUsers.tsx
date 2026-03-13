@@ -34,6 +34,7 @@ import {
   useEducationStages,
   useEducationSubjects,
 } from "@/features/education";
+import ChildSchoolUserModal from "@/components/family/ChildSchoolUserModal";
 
 type ActiveTab = "students" | "teachers";
 
@@ -48,6 +49,9 @@ function StudentsSection() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
+    null,
+  );
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -165,12 +169,23 @@ function StudentsSection() {
         isLoading={studentsQuery.isLoading}
         emptyMessage="لا يوجد طلاب مطابقون حالياً."
         countLabel="طالب"
+        onEditUser={(userId) => {
+          setSelectedStudentId(userId);
+        }}
         canDeactivate={canDeactivate}
         onDeactivate={(userId) =>
           void deactivateMutation.mutateAsync({ userId })
         }
         isDeactivatePending={deactivateMutation.isPending}
       />
+
+      {selectedStudentId !== null && (
+        <ChildSchoolUserModal
+          open={selectedStudentId !== null}
+          onClose={() => setSelectedStudentId(null)}
+          userId={selectedStudentId}
+        />
+      )}
 
       <Dialog open={isCreateOpen} onOpenChange={handleCreateOpenChange}>
         <DialogContent className="sm:max-w-2xl" dir="rtl">
@@ -348,6 +363,9 @@ function StudentsSection() {
 function TeachersSection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedTeacherId, setSelectedTeacherId] = useState<number | null>(
+    null,
+  );
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -453,12 +471,23 @@ function TeachersSection() {
         isLoading={teachersQuery.isLoading}
         emptyMessage="لا يوجد معلمون مطابقون حالياً."
         countLabel="معلم"
+        onEditUser={(userId) => {
+          setSelectedTeacherId(userId);
+        }}
         canDeactivate
         onDeactivate={(userId) =>
           void deactivateMutation.mutateAsync({ userId })
         }
         isDeactivatePending={deactivateMutation.isPending}
       />
+
+      {selectedTeacherId !== null && (
+        <ChildSchoolUserModal
+          open={selectedTeacherId !== null}
+          onClose={() => setSelectedTeacherId(null)}
+          userId={selectedTeacherId}
+        />
+      )}
 
       <Dialog open={isCreateOpen} onOpenChange={handleCreateOpenChange}>
         <DialogContent className="sm:max-w-2xl" dir="rtl">

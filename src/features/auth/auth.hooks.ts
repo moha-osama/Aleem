@@ -11,6 +11,7 @@ import {
   changePassword,
   deactivateSchoolUser,
   getMe,
+  getSchoolUser,
   getSchoolUsers,
   login,
   logout,
@@ -19,6 +20,7 @@ import {
   registerSchool,
   registerStudent,
   registerTeacher,
+  updateSchoolUser,
   updateMe,
 } from "./auth.api";
 import type {
@@ -37,8 +39,10 @@ import type {
   RegisterSchoolResponse,
   RegisterStudentRequest,
   RegisterTeacherRequest,
+  SchoolUserDetails,
   SchoolUserRoleFilter,
   SchoolUsersResult,
+  UpdateSchoolUserParams,
   UpdateMeRequest,
 } from "./auth.types";
 
@@ -57,6 +61,8 @@ export const authQueryKeys = {
   me: () => [...authQueryKeys.all, "me"] as const,
   schoolUsers: (role?: SchoolUserRoleFilter) =>
     [...authQueryKeys.all, "school-users", role ?? "all"] as const,
+  schoolUser: (userId: number) =>
+    [...authQueryKeys.all, "school-user", userId] as const,
 };
 
 export function useMe(enabled = true): UseQueryResult<AuthUser> {
@@ -74,6 +80,17 @@ export function useSchoolUsers(
   return useQuery({
     queryKey: authQueryKeys.schoolUsers(role),
     queryFn: ({ signal }) => getSchoolUsers(role, { signal }),
+    enabled,
+  });
+}
+
+export function useSchoolUser(
+  userId: number,
+  enabled = true,
+): UseQueryResult<SchoolUserDetails> {
+  return useQuery({
+    queryKey: authQueryKeys.schoolUser(userId),
+    queryFn: ({ signal }) => getSchoolUser(userId, { signal }),
     enabled,
   });
 }
@@ -224,6 +241,28 @@ export function useDeactivateSchoolUser(): UseMutationResult<
     mutationFn: ({ signal, ...payload }) =>
       deactivateSchoolUser(payload, { signal }),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: authQueryKeys.schoolUsers(),
+      });
+    },
+  });
+}
+
+export function useUpdateSchoolUser(): UseMutationResult<
+  SchoolUserDetails,
+  Error,
+  MutationWithSignal<UpdateSchoolUserParams>
+> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ signal, ...payload }) =>
+      updateSchoolUser(payload, { signal }),
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(
+        authQueryKeys.schoolUser(updatedUser.id),
+        updatedUser,
+      );
       queryClient.invalidateQueries({
         queryKey: authQueryKeys.schoolUsers(),
       });

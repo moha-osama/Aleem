@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Pencil, UserX } from "lucide-react";
 import type { SchoolUserSummary } from "@/features/auth";
 import { displayName } from "@/features/auth";
 
@@ -10,6 +10,8 @@ interface SchoolUsersTableProps {
   isLoading: boolean;
   emptyMessage: string;
   countLabel: string;
+  onSelectUser?: (userId: number) => void;
+  onEditUser?: (userId: number) => void;
   canDeactivate?: boolean;
   onDeactivate?: (userId: number) => void;
   isDeactivatePending?: boolean;
@@ -21,10 +23,14 @@ export default function SchoolUsersTable({
   isLoading,
   emptyMessage,
   countLabel,
+  onSelectUser,
+  onEditUser,
   canDeactivate = false,
   onDeactivate,
   isDeactivatePending = false,
 }: SchoolUsersTableProps) {
+  const editHandler = onEditUser ?? onSelectUser;
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="overflow-x-auto">
@@ -52,7 +58,11 @@ export default function SchoolUsersTable({
           </thead>
           <tbody className="divide-y divide-gray-200">
             {items.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+              <tr
+                key={user.id}
+                className={`hover:bg-gray-50 transition-colors ${onSelectUser ? "cursor-pointer" : ""}`}
+                onClick={() => onSelectUser?.(user.id)}
+              >
                 <td className="px-6 py-4">
                   <span className="font-semibold text-gray-900">
                     {displayName(user)}
@@ -74,16 +84,33 @@ export default function SchoolUsersTable({
                 </td>
                 {(canDeactivate || onDeactivate) && (
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 justify-end">
+                    <div className="flex items-center gap-2 justify-start">
+                      {editHandler && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            editHandler(user.id);
+                          }}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                      )}
+
                       {canDeactivate && onDeactivate && (
                         <Button
                           variant="ghost"
                           size="sm"
                           className="text-red-600 hover:text-red-700 hover:bg-red-50"
                           disabled={isDeactivatePending}
-                          onClick={() => onDeactivate(user.id)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onDeactivate(user.id);
+                          }}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <UserX className="w-4 h-4" />
                         </Button>
                       )}
                     </div>

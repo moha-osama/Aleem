@@ -144,6 +144,28 @@ export interface DeactivateSchoolUserParams {
   userId: number;
 }
 
+export interface SchoolUserDetails {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  role: UserRole;
+  school_name: string;
+}
+
+export interface UpdateSchoolUserRequest {
+  username?: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+}
+
+export interface UpdateSchoolUserParams {
+  userId: number;
+  payload: UpdateSchoolUserRequest;
+}
+
 export function displayName(user: SchoolUserSummary): string {
   const fullName = `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim();
   return fullName || user.username;

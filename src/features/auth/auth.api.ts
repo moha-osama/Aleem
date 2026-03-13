@@ -9,6 +9,7 @@ import {
   refreshTokenResponseSchema,
   registerAccountResponseSchema,
   registerSchoolResponseSchema,
+  schoolUserDetailsSchema,
   schoolUsersArraySchema,
 } from "./auth.schemas";
 import type {
@@ -27,8 +28,10 @@ import type {
   RegisterSchoolResponse,
   RegisterStudentRequest,
   RegisterTeacherRequest,
+  SchoolUserDetails,
   SchoolUserRoleFilter,
   SchoolUsersResult,
+  UpdateSchoolUserParams,
   UpdateMeRequest,
 } from "./auth.types";
 
@@ -187,4 +190,30 @@ export async function deactivateSchoolUser(
   );
 
   return parseWithSchema(apiDetailResponseSchema, response.data);
+}
+
+export async function getSchoolUser(
+  userId: number,
+  options?: RequestOptions,
+): Promise<SchoolUserDetails> {
+  const response = await apiClient.get(`/api/auth/school/users/${userId}/`, {
+    signal: options?.signal,
+  });
+
+  return parseWithSchema(schoolUserDetailsSchema, response.data);
+}
+
+export async function updateSchoolUser(
+  params: UpdateSchoolUserParams,
+  options?: RequestOptions,
+): Promise<SchoolUserDetails> {
+  const response = await apiClient.patch(
+    `/api/auth/school/users/${params.userId}/`,
+    params.payload,
+    {
+      signal: options?.signal,
+    },
+  );
+
+  return parseWithSchema(schoolUserDetailsSchema, response.data);
 }

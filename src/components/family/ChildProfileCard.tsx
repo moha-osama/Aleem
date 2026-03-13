@@ -2,21 +2,32 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { BookOpen, CalendarDays, Pencil, User } from "lucide-react";
+import { BookOpen, CalendarDays, User } from "lucide-react";
 import type { ParentChild } from "@/features/parents";
-import EditChildProfile from "./EditChildProfile";
+import ChildSchoolUserModal from "./ChildSchoolUserModal";
 
 interface ChildProfileCardProps {
   child: ParentChild;
 }
 
 export default function ChildProfileCard({ child }: ChildProfileCardProps) {
-  const [showEdit, setShowEdit] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   return (
     <>
-      <Card className="p-6 hover:shadow-lg transition-shadow" dir="rtl">
+      <Card
+        className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+        dir="rtl"
+        role="button"
+        tabIndex={0}
+        onClick={() => setIsDetailsOpen(true)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setIsDetailsOpen(true);
+          }
+        }}
+      >
         <div className="flex items-start gap-4">
           <Avatar className="w-16 h-16 border-2 border-[#8B5CF6]">
             <AvatarImage alt={child.full_name} />
@@ -33,15 +44,6 @@ export default function ChildProfileCard({ child }: ChildProfileCardProps) {
                 </h3>
                 <p className="text-sm text-gray-600">@{child.username}</p>
               </div>
-              {/* <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowEdit(true)}
-                className="gap-1 text-[#8B5CF6] border-[#8B5CF6] hover:bg-[#8B5CF6]/10"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-                تعديل
-              </Button> */}
             </div>
 
             <div className="flex flex-wrap gap-2 mb-5">
@@ -69,10 +71,10 @@ export default function ChildProfileCard({ child }: ChildProfileCardProps) {
         </div>
       </Card>
 
-      <EditChildProfile
-        open={showEdit}
-        onClose={() => setShowEdit(false)}
-        child={child}
+      <ChildSchoolUserModal
+        open={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        userId={child.user_id}
       />
     </>
   );

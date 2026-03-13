@@ -67,3 +67,13 @@ export const paginatedSchoolUsersSchema = z.object({
   previous: z.string().nullable(),
   results: z.array(schoolUserSummarySchema),
 });
+
+export const schoolUserDetailsSchema = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: emailSchema,
+  first_name: z.string(),
+  last_name: z.string(),
+  role: userRoleSchema,
+  school_name: z.string(),
+});

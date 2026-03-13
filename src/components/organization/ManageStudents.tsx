@@ -25,6 +25,7 @@ import {
   useSchoolUsers,
 } from "@/features/auth";
 import { useEducationLevels, useEducationStages } from "@/features/education";
+import ChildSchoolUserModal from "@/components/family/ChildSchoolUserModal";
 import SchoolUsersTable from "./SchoolUsersTable";
 
 export default function ManageStudents() {
@@ -34,6 +35,9 @@ export default function ManageStudents() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
+    null,
+  );
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -163,12 +167,27 @@ export default function ManageStudents() {
         isLoading={studentsQuery.isLoading}
         emptyMessage="لا يوجد طلاب مطابقون حالياً."
         countLabel="طالب"
+        onSelectUser={
+          role === "school_admin"
+            ? (userId) => {
+                setSelectedStudentId(userId);
+              }
+            : undefined
+        }
         canDeactivate={canDeactivate}
         onDeactivate={(userId) =>
           void deactivateStudentMutation.mutateAsync({ userId })
         }
         isDeactivatePending={deactivateStudentMutation.isPending}
       />
+
+      {selectedStudentId !== null && (
+        <ChildSchoolUserModal
+          open={selectedStudentId !== null}
+          onClose={() => setSelectedStudentId(null)}
+          userId={selectedStudentId}
+        />
+      )}
 
       <Dialog open={isCreateOpen} onOpenChange={handleCreateOpenChange}>
         <DialogContent className="sm:max-w-2xl" dir="rtl">
